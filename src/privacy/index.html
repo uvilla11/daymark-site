@@ -75,7 +75,7 @@
           <p>
             Forecasts use Apple WeatherKit. Place search, and a fallback forecast when WeatherKit is
             unavailable, use Open-Meteo. The place you search for and its coordinates are sent to those
-            services.
+            services. Daymark does not use your device’s location.
           </p>
 
           <h3>Link details on the Shelf</h3>
@@ -94,7 +94,8 @@
           <h3>Optional on-device model</h3>
           <p>
             The Gemma 4 model is downloaded only after you choose it. The download comes from Hugging Face;
-            after it is installed, the model runs locally. You can remove the downloaded model in Settings.
+            after it is installed, the model runs locally. The download uses Wi‑Fi only unless you allow
+            cellular. You can remove the downloaded model in Settings.
           </p>
         </section>
 
@@ -115,11 +116,68 @@
           </p>
         </section>
 
+        <section aria-labelledby="permissions-title">
+          <h2 id="permissions-title">Permissions</h2>
+          <ul>
+            <li>
+              <strong>Calendars and Reminders.</strong> Only if you allow access. Daymark reads the calendars
+              and lists you choose, and saves the edits you make back to them.
+            </li>
+            <li>
+              <strong>Photos.</strong> Daymark sees only the images you pick for the Shelf. Saving an image
+              from the Shelf asks to add it to your library; it does not read your library.
+            </li>
+            <li><strong>Notifications.</strong> Each kind of reminder is off until you turn it on.</li>
+          </ul>
+        </section>
+
+        <section aria-labelledby="not-title">
+          <h2 id="not-title">What Daymark does not do</h2>
+          <ul>
+            <li>No account or sign-in.</li>
+            <li>No analytics, advertising, or tracking, and no third-party SDKs that collect data.</li>
+            <li>No cloud sync and no remote AI service.</li>
+            <li>No selling or sharing of personal data.</li>
+          </ul>
+          <p>
+            If you choose to share analytics with app developers in iOS Settings, Apple may provide crash
+            reports to the developer. Apple handles that under its own privacy policy.
+          </p>
+        </section>
+
+        <section aria-labelledby="control-title">
+          <h2 id="control-title">Your control</h2>
+          <ul>
+            <li>Export your tasks, events, and Shelf entries from Settings, and import them later.</li>
+            <li>
+              Erase Daymark data in Settings removes your tasks, events, Shelf entries, rituals, reviews,
+              timers, focus records, assistant chat, and pending shared captures. Settings and a downloaded
+              model stay until you remove them.
+            </li>
+            <li>Remove the on-device model from Settings at any time.</li>
+            <li>Deleting the app removes its data from your device. Like other app data, the daybook can be
+              included in the backups iOS makes for you.</li>
+          </ul>
+        </section>
+
         <section aria-labelledby="website-title">
           <h2 id="website-title">This website</h2>
           <p>
             This static site uses no cookies, analytics, or third-party assets. Its styles, scripts, icons, and
             images are served from the site itself.
+          </p>
+        </section>
+
+        <section aria-labelledby="children-title">
+          <h2 id="children-title">Children</h2>
+          <p>Daymark does not knowingly collect information from anyone, including children.</p>
+        </section>
+
+        <section aria-labelledby="changes-title">
+          <h2 id="changes-title">Changes and contact</h2>
+          <p>
+            If this policy changes, the new version will be posted here with a new date. Last updated
+            {{UPDATED}}. {{CONTACT_SENTENCE}}
           </p>
         </section>
 

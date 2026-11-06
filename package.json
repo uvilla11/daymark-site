@@ -1,0 +1,15 @@
+{
+  "name": "daymark-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "images": "node scripts/images.mjs",
+    "test": "node scripts/build.mjs && playwright test"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
+    "@playwright/test": "1.64.1",
+    "sharp": "0.35.5"
+  }
+}

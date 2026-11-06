@@ -3,6 +3,21 @@ const $$ = (selector, scope = document) => Array.from(scope.querySelectorAll(sel
 const now = () => performance.now() / 1000;
 const motionOK = matchMedia("(prefers-reduced-motion: no-preference)");
 const storyMode = matchMedia("(min-width: 981px) and (min-height: 620px)");
+const hero = document.querySelector(".hero");
+const heroDepthProps = ["--hero-atmosphere-y", "--hero-back-y", "--hero-middle-y", "--hero-product-y", "--hero-product-scale", "--hero-side-y"];
+const resetHeroDepth = () => heroDepthProps.forEach(property => hero?.style.removeProperty(property));
+const renderHeroDepth = viewport => {
+  if (!hero || !motionOK.matches) return;
+  const distance = Math.max(1, Math.min(hero.offsetHeight * .72, viewport * .76));
+  const progress = Math.min(1, Math.max(0, -hero.getBoundingClientRect().top / distance));
+  const scale = innerWidth < 600 ? .55 : innerWidth < 981 ? .75 : 1;
+  hero.style.setProperty("--hero-atmosphere-y", `${(-10 * progress * scale).toFixed(2)}px`);
+  hero.style.setProperty("--hero-back-y", `${(-26 * progress * scale).toFixed(2)}px`);
+  hero.style.setProperty("--hero-middle-y", `${(-12 * progress * scale).toFixed(2)}px`);
+  hero.style.setProperty("--hero-product-y", `${(12 * progress * scale).toFixed(2)}px`);
+  hero.style.setProperty("--hero-product-scale", (1 - .025 * progress * scale).toFixed(4));
+  hero.style.setProperty("--hero-side-y", `${(23 * progress * scale).toFixed(2)}px`);
+};
 
 // The phone, index bead, and paper share one rAF queue. The same retargetable
 // closed-form spring used by the original tour keeps value and velocity joined.
@@ -351,6 +366,7 @@ const indexForTarget = target => {
 const update = () => {
   queued = false;
   const viewport = innerHeight;
+  renderHeroDepth(viewport);
   paintCards(viewport);
   paintHeadings();
   const total = root.scrollHeight - viewport;
@@ -435,6 +451,8 @@ for (const type of ["wheel", "touchstart", "keydown"]) {
 const applyMode = () => {
   root.dataset.storyMode = storyMode.matches ? "desktop" : "inline";
   root.dataset.cardMotion = storyMode.matches && motionOK.matches ? "on" : "off";
+  root.dataset.heroMotion = motionOK.matches ? "on" : "off";
+  if (!motionOK.matches) resetHeroDepth();
   if (root.dataset.cardMotion === "off") clearCardMotion();
   if (!storyMode.matches) chapterHeads.forEach(head => head.style.removeProperty('--heading-opacity'));
   $$(".steps").forEach(strip => {
@@ -581,6 +599,8 @@ const stopMotion = () => {
   cancelAnimationFrame(frameId);
   animators.clear();
   ticking = false;
+  root.dataset.heroMotion = "off";
+  resetHeroDepth();
   deck.snap(deck.target());
   beadLeading.snap(beadLeading.target());
   beadTrailing.snap(beadTrailing.target());

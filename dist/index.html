@@ -41,6 +41,7 @@
 
     <main id="main">
       <section class="hero" id="top" data-walk="dawn" data-index="today" aria-labelledby="hero-title">
+        <div class="hero-atmosphere" aria-hidden="true"></div>
         <div class="hero-inner">
           <div class="hero-copy">
             <p class="hero-context">A daybook for iPhone and iPad</p>
@@ -52,12 +53,19 @@
             </div>
             <p class="availability">Coming soon to the App Store <span>·</span> iOS 18 or later</p>
           </div>
-          <figure class="hero-figure">
-            <div class="device-frame device-frame-hero">
-              <img src="/assets/today.webp" width="920" height="2000" alt="Daymark Today screen with a labeled sample day, the next event, open tasks, and rituals." fetchpriority="high" />
+          <div class="hero-art">
+            <span class="hero-paper hero-paper--back" aria-hidden="true"></span>
+            <span class="hero-paper hero-paper--middle" aria-hidden="true"></span>
+            <div class="hero-product-plane">
+              <figure class="hero-figure">
+                <div class="device-frame device-frame-hero">
+                  <img src="/assets/today.webp" width="920" height="2000" alt="Daymark Today screen with a labeled sample day, the next event, open tasks, and rituals." fetchpriority="high" />
+                </div>
+                <figcaption><span class="sample-tag">Sample day</span> Example entries shown in the app.</figcaption>
+              </figure>
             </div>
-            <figcaption><span class="sample-tag">Sample day</span> Example entries shown in the app.</figcaption>
-          </figure>
+            <span class="hero-paper hero-paper--side" aria-hidden="true"></span>
+          </div>
         </div>
       </section>
 
@@ -651,9 +659,9 @@
       <section class="daylight-section section-pad" id="daylight" data-walk="daylight" aria-labelledby="daylight-title">
         <div class="daylight-copy">
           <h2 id="daylight-title">The paper follows the day.</h2>
-          <p>Choose Daylight and the page moves with your weather city’s sunrise and sunset. Without a forecast it keeps a plain 6:30 to 6:30 day.</p>
+          <p>The same Today screen moves from first light to late night with the sun. Daylight follows sunrise and sunset in your selected weather city, or a plain 6:30 to 6:30 day without a forecast.</p>
           <fieldset class="phase-picker">
-            <legend>Try a paper tone</legend>
+            <legend>Choose one of six captured tones</legend>
 
   <label class="phase-choice" data-phase-choice="predawn">
     <input type="radio" name="phase" value="predawn" />

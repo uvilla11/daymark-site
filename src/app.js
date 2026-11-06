@@ -295,20 +295,37 @@ const chapterHeads = $$('.story-flow .chapter-head');
 const clearCardMotion = () => storyCards.forEach(card => {
   card.style.removeProperty('--card-opacity');
 });
-// Cards crossfade as they pass through the reading area. They must disappear
-// *before* entering the pinned chapter header; masking by card center alone
-// allowed large, partly severed letters to show while scrolling backwards.
-const paintCards = () => {
-  if (root.dataset.cardMotion !== 'on') return;
+// The sticky heading masks the covered top of each card. Keep the remaining
+// copy opaque and fade only its last 24px as the trailing edge passes under it.
+const paintCards = viewport => {
+  if (root.dataset.storyMode !== 'desktop') return null;
   const fadeRange = 24;
+  let visibleScreen = null;
+  let nearestDistance = Infinity;
+  let largestExposure = 0;
   storyCards.forEach(card => {
     const rect = card.getBoundingClientRect();
     const header = card.closest('.chapter')?.querySelector('.chapter-head');
     const headerEdge = header?.getBoundingClientRect().bottom ?? 0;
-    const gap = rect.top - headerEdge;
-    const clearOfHeader = Math.max(0, Math.min(1, gap / fadeRange));
-    card.style.setProperty('--card-opacity', clearOfHeader.toFixed(3));
+    if (root.dataset.cardMotion === 'on') {
+      const trailingClearance = rect.bottom - headerEdge;
+      const opacity = Math.max(0, Math.min(1, trailingClearance / fadeRange));
+      card.style.setProperty('--card-opacity', opacity.toFixed(3));
+    }
+    const exposedTop = Math.max(rect.top, headerEdge, 0);
+    const exposedBottom = Math.min(rect.bottom, viewport);
+    const exposedHeight = Math.max(0, exposedBottom - exposedTop);
+    if (!exposedHeight) return;
+    const availableTop = Math.max(0, Math.min(headerEdge, viewport));
+    const readingLine = availableTop + (viewport - availableTop) * .32;
+    const distance = readingLine < exposedTop ? exposedTop - readingLine : readingLine > exposedBottom ? readingLine - exposedBottom : 0;
+    if (distance < nearestDistance || (distance === nearestDistance && exposedHeight > largestExposure)) {
+      visibleScreen = card.closest('.step[data-screen]');
+      nearestDistance = distance;
+      largestExposure = exposedHeight;
+    }
   });
+  return visibleScreen;
 };
 // As one sticky chapter makes way for the next, dissolve its heading before
 // the exiting text can peek above the index. This follows the actual sticky
@@ -363,7 +380,7 @@ const update = () => {
   queued = false;
   const viewport = innerHeight;
   renderHeroDepth(viewport);
-  paintCards();
+  const exposedScreen = paintCards(viewport);
   paintHeadings();
   const total = root.scrollHeight - viewport;
   const progress = total > 0 ? Math.min(1, Math.max(0, scrollY / total)) : 0;
@@ -380,7 +397,7 @@ const update = () => {
     }
   }
   if (root.dataset.storyMode === "desktop" && !pendingTarget) {
-    const activeScreen = closestBand(screenBands, y);
+    const activeScreen = exposedScreen || closestBand(screenBands, y);
     if (activeScreen?.dataset.screen && activeScreen.dataset.screen !== screenId) setScreen(activeScreen.dataset.screen);
     storyStops.forEach(stop => stop.classList.toggle("is-active", stop === activeScreen));
   }

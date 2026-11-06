@@ -677,6 +677,7 @@ html.tone-cut, html.tone-cut *, html.tone-cut *::before, html.tone-cut *::after 
 .page-back { display: inline-block; margin-top: 32px; color: var(--ember); font-size: 14px; font-weight: 620; text-underline-offset: 4px; }
 
 @media (min-width: 981px) and (min-height: 620px) {
+  .chapter-index { padding-bottom: 14px; }
   .story-flow { padding-right: 3px; }
   .story-stage { top: 140px; height: calc(100vh - 150px); }
   .stage-device { width: min(23rem, calc((100vh - 230px) * .46)); }
@@ -702,10 +703,11 @@ html.tone-cut, html.tone-cut *, html.tone-cut *::before, html.tone-cut *::after 
   html.js-ready[data-story-mode="desktop"] .chapter-head h2 { font-size: clamp(43px, 4.3vw, 59px); margin-bottom: 15px; }
   html.js-ready[data-story-mode="desktop"] .chapter-head > p:last-child { max-width: 56ch; font-size: 18px; line-height: 1.55; }
   html.js-ready[data-story-mode="desktop"] .step {
-    min-height: clamp(670px, 85vh, 900px);
+    min-height: 0;
     display: flex;
     align-items: center;
-    padding: 74px 0 92px;
+    padding: 14px 0 18px;
+    scroll-margin-top: 248px;
   }
   html.js-ready[data-story-mode="desktop"] .step-copy {
     max-width: 590px;

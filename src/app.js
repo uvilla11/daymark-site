@@ -275,6 +275,44 @@ const activateLink = (id, instant = false) => {
 };
 
 const storyStops = $$('.story-flow [data-screen]');
+const storyCards = storyStops.map(stop => stop.querySelector('.step-copy')).filter(Boolean);
+const chapterHeads = $$('.story-flow .chapter-head');
+const clearCardMotion = () => storyCards.forEach(card => {
+  for (const property of ['--card-opacity', '--card-shift', '--card-tilt', '--card-scale']) card.style.removeProperty(property);
+});
+// The text cards follow a quiet, continuous rolodex: the card nearest the
+// reading line resolves into focus while its neighbors ease toward the paper.
+// This only changes presentation; all content remains in the reading order.
+const paintCards = viewport => {
+  if (root.dataset.cardMotion !== 'on') return;
+  const readingLine = viewport * .69;
+  const spread = Math.max(420, viewport * .78);
+  const positions = storyCards.map(card => {
+    const rect = card.getBoundingClientRect();
+    return (rect.top + rect.bottom) / 2;
+  });
+  storyCards.forEach((card, index) => {
+    const delta = positions[index] - readingLine;
+    const proximity = Math.max(0, Math.min(1, 1 - Math.abs(delta) / spread));
+    const eased = proximity * proximity * (3 - 2 * proximity);
+    // Retired cards fade completely before reaching the fixed navigation.
+    const aboveMask = Math.max(0, Math.min(1, (positions[index] - viewport * .24) / (viewport * .22)));
+    card.style.setProperty('--card-opacity', ((.42 + .58 * eased) * aboveMask).toFixed(3));
+    card.style.setProperty('--card-shift', `${((1 - eased) * (delta >= 0 ? 24 : -16)).toFixed(1)}px`);
+    card.style.setProperty('--card-tilt', `${((1 - eased) * (delta >= 0 ? -2.1 : 2.1)).toFixed(2)}deg`);
+    card.style.setProperty('--card-scale', (.98 + .02 * eased).toFixed(4));
+  });
+};
+// As one sticky chapter makes way for the next, dissolve its heading before
+// the exiting text can peek above the index. This follows the actual sticky
+// position, so direct chapter jumps and reverse scrolls behave the same way.
+const paintHeadings = () => {
+  if (root.dataset.storyMode !== 'desktop') return;
+  chapterHeads.forEach(head => {
+    const opacity = Math.max(0, Math.min(1, (head.getBoundingClientRect().top - 70) / 80));
+    head.style.setProperty('--heading-opacity', opacity.toFixed(3));
+  });
+};
 const walkers = $$('main [data-walk]');
 const toBand = element => {
   const rect = element.getBoundingClientRect();
@@ -317,6 +355,8 @@ const indexForTarget = target => {
 const update = () => {
   queued = false;
   const viewport = innerHeight;
+  paintCards(viewport);
+  paintHeadings();
   const total = root.scrollHeight - viewport;
   const progress = total > 0 ? Math.min(1, Math.max(0, scrollY / total)) : 0;
   document.querySelector("[data-progress]")?.style.setProperty("transform", `scaleX(${progress.toFixed(4)})`);
@@ -398,6 +438,9 @@ for (const type of ["wheel", "touchstart", "keydown"]) {
 // Responsive mode changes retain content in flow on compact/tall-narrow views.
 const applyMode = () => {
   root.dataset.storyMode = storyMode.matches ? "desktop" : "inline";
+  root.dataset.cardMotion = storyMode.matches && motionOK.matches ? "on" : "off";
+  if (root.dataset.cardMotion === "off") clearCardMotion();
+  if (!storyMode.matches) chapterHeads.forEach(head => head.style.removeProperty('--heading-opacity'));
   $$(".steps").forEach(strip => {
     if (storyMode.matches || strip.children.length < 2) strip.removeAttribute("tabindex");
     else strip.tabIndex = 0;
@@ -547,6 +590,8 @@ const stopMotion = () => {
   beadTrailing.snap(beadTrailing.target());
   renderBead(now());
   clearDeckStyles();
+  clearCardMotion();
+  root.dataset.cardMotion = 'off';
   setScreen(screenId, true);
   document.querySelectorAll(".step-shot, .ipad-figure, .daylight-figure").forEach(element => {
     element.getAnimations?.().forEach(animation => animation.cancel());
@@ -554,7 +599,7 @@ const stopMotion = () => {
 };
 motionOK.addEventListener("change", () => {
   if (!motionOK.matches) stopMotion();
-  else { measure(); }
+  else applyMode();
 });
 storyMode.addEventListener("change", applyMode);
 window.addEventListener("resize", measure, { passive: true });

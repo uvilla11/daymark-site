@@ -48,9 +48,11 @@ const chapters = data.chapters.map((chapter, chapterIndex) => `
           <figcaption>${caption(step.label, step.caption)}</figcaption>
         </figure>
         <div class="step-copy">
+          <div class="step-topline"><span>${esc(chapter.nav)} / Page</span><span>${String(index + 1).padStart(2, "0")} <span aria-hidden="true">/</span> ${String(chapter.steps.length).padStart(2, "0")}</span></div>
           <h3>${esc(step.title)}</h3>
-          <p>${esc(step.body)}</p>
-          ${chapter.id === "rituals" ? `<p class="feature-detail">Check in from Today or from the Rituals page.</p>` : ""}
+          <p class="step-summary">${esc(step.body)}</p>
+          ${step.detail ? `<p class="step-detail">${esc(step.detail)}</p>` : ""}
+          ${step.highlights?.length ? `<ul class="step-highlights" aria-label="Features shown">${step.highlights.map(item => `<li>${esc(item)}</li>`).join("")}</ul>` : ""}
         </div>
       </li>`).join("\n")}
     </ol>

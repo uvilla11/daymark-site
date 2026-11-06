@@ -63,7 +63,7 @@
       ]
     },
     {
-      "id": "settings", "nav": "Settings", "tone": "nightfall", "title": "Yours to set.",
+      "id": "settings", "nav": "Settings", "tone": "parchment", "title": "Yours to set.",
       "intro": "Daymark starts empty and stays quiet until you ask for more.",
       "steps": [
         {"id":"welcome","asset":"welcome.webp","alt":"Welcome screen with Enter Daymark and Explore a sample day.","title":"It starts empty.","body":"A fresh install holds nothing of yours. Explore a sample day to see the loop, then choose Start fresh to clear it.","detail":"Try the experience with clearly labeled example content, without carrying those examples into a fresh daybook.","label":"Product UI","caption":"Welcome"},

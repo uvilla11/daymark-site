@@ -39,7 +39,13 @@ const chapters = data.chapters.map((chapter, chapterIndex) => `
       <h2 id="${esc(chapter.id)}-title">${esc(chapter.title)}</h2>
       <p>${esc(chapter.intro)}</p>
     </header>
-    <ol class="steps" aria-label="${esc(chapter.nav)} screens">
+    ${chapter.steps.length > 1 ? `
+    <div class="strip-controls" data-strip-controls role="group" aria-label="${esc(chapter.nav)} screen controls" hidden>
+      <button class="strip-control" type="button" data-strip-step="-1" aria-controls="${esc(chapter.id)}-screens" aria-label="Previous screen" aria-disabled="true"><span class="strip-control-arrow" aria-hidden="true">←</span><span>Previous</span></button>
+      <output class="strip-position" data-strip-position aria-live="polite" aria-atomic="true" aria-label="Screen 1 of ${chapter.steps.length}">1 / ${chapter.steps.length}</output>
+      <button class="strip-control" type="button" data-strip-step="1" aria-controls="${esc(chapter.id)}-screens" aria-label="Next screen" aria-disabled="false"><span>Next</span><span class="strip-control-arrow" aria-hidden="true">→</span></button>
+    </div>` : ""}
+    <ol class="steps" id="${esc(chapter.id)}-screens"${chapter.steps.length > 1 ? ' tabindex="0"' : ""} aria-label="${esc(chapter.nav)} screens">
       ${chapter.steps.map((step, index) => `
       <li class="step" id="${esc(step.id === chapter.id ? `${step.id}-screen` : step.id)}" data-screen="${esc(step.id)}">
         <figure class="step-shot">
@@ -54,7 +60,7 @@ const chapters = data.chapters.map((chapter, chapterIndex) => `
         </div>
       </li>`).join("\n")}
     </ol>
-    ${chapter.steps.length > 1 ? `<p class="strip-hint" aria-hidden="true">Swipe to explore <span class="strip-count">· <span class="strip-at">1</span> of ${chapter.steps.length}</span></p>` : ""}
+    ${chapter.steps.length > 1 ? `<p class="strip-hint">Swipe to explore. Each card is numbered.</p>` : ""}
     ${chapter.id === "rituals" ? `
     <figure class="ledger" aria-labelledby="ledger-title">
       <figcaption id="ledger-title"><strong>Try the week ledger.</strong> Select a day to check in, and select it again to clear it.</figcaption>

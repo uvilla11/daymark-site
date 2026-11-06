@@ -293,25 +293,21 @@ const storyStops = $$('.story-flow [data-screen]');
 const storyCards = storyStops.map(stop => stop.querySelector('.step-copy')).filter(Boolean);
 const chapterHeads = $$('.story-flow .chapter-head');
 const clearCardMotion = () => storyCards.forEach(card => {
-  for (const property of ['--card-opacity', '--card-shift']) card.style.removeProperty(property);
+  card.style.removeProperty('--card-opacity');
 });
 // Cards crossfade as they pass through the reading area. They must disappear
 // *before* entering the pinned chapter header; masking by card center alone
 // allowed large, partly severed letters to show while scrolling backwards.
-const paintCards = viewport => {
+const paintCards = () => {
   if (root.dataset.cardMotion !== 'on') return;
-  const readingLine = viewport * .69;
-  const spread = Math.max(420, viewport * .78);
+  const fadeRange = 24;
   storyCards.forEach(card => {
     const rect = card.getBoundingClientRect();
-    const delta = (rect.top + rect.bottom) / 2 - readingLine;
-    const proximity = Math.max(0, Math.min(1, 1 - Math.abs(delta) / spread));
-    const eased = proximity * proximity * (3 - 2 * proximity);
     const header = card.closest('.chapter')?.querySelector('.chapter-head');
     const headerEdge = header?.getBoundingClientRect().bottom ?? 0;
-    const clearOfHeader = Math.max(0, Math.min(1, (rect.top - headerEdge - 32) / 90));
-    card.style.setProperty('--card-opacity', ((.68 + .32 * eased) * clearOfHeader).toFixed(3));
-    card.style.setProperty('--card-shift', `${((1 - eased) * (delta >= 0 ? 12 : -8)).toFixed(1)}px`);
+    const gap = rect.top - headerEdge;
+    const clearOfHeader = Math.max(0, Math.min(1, gap / fadeRange));
+    card.style.setProperty('--card-opacity', clearOfHeader.toFixed(3));
   });
 };
 // As one sticky chapter makes way for the next, dissolve its heading before
@@ -367,7 +363,7 @@ const update = () => {
   queued = false;
   const viewport = innerHeight;
   renderHeroDepth(viewport);
-  paintCards(viewport);
+  paintCards();
   paintHeadings();
   const total = root.scrollHeight - viewport;
   const progress = total > 0 ? Math.min(1, Math.max(0, scrollY / total)) : 0;
@@ -397,6 +393,7 @@ const schedule = () => {
 const measure = () => {
   walkBands = walkers.map(toBand);
   screenBands = storyMode.matches ? storyStops.map(toBand) : [];
+  refreshAllStrips();
   if (activeIndex) activateLink(activeIndex, true);
   schedule();
 };
@@ -458,26 +455,119 @@ const applyMode = () => {
   $$(".steps").forEach(strip => {
     if (storyMode.matches || strip.children.length < 2) strip.removeAttribute("tabindex");
     else strip.tabIndex = 0;
+    const controls = strip.parentElement?.querySelector("[data-strip-controls]");
+    if (controls) controls.hidden = storyMode.matches;
   });
   if (root.dataset.storyMode === "desktop") setScreen(screenId, true);
   else clearDeckStyles();
   measure();
 };
 
-// Gallery position is local to each strip and never moves the page.
+// Each compact rail keeps its native scroll position. Controls use the same
+// measured snap stops as touch and keyboard scrolling, including the clamped
+// final card after the JS-only tail space has been added.
+const stripStates = new Map();
+const stripSnapStops = strip => {
+  const items = Array.from(strip.children).filter(item => item.matches(".step"));
+  if (!items.length) return [];
+  const style = getComputedStyle(strip);
+  const rect = strip.getBoundingClientRect();
+  const snapStart = rect.left + strip.clientLeft + (parseFloat(style.scrollPaddingLeft) || 0);
+  return items.map(item => strip.scrollLeft + item.getBoundingClientRect().left - snapStart);
+};
+const refreshStripLayout = state => {
+  const { strip, items } = state;
+  if (storyMode.matches) {
+    if (strip.style.getPropertyValue("--strip-tail")) strip.style.removeProperty("--strip-tail");
+    state.stops = [];
+    return;
+  }
+  const style = getComputedStyle(strip);
+  const lastWidth = items.at(-1).getBoundingClientRect().width;
+  const rightPadding = parseFloat(style.paddingRight) || 0;
+  const snapStartInset = strip.clientLeft + (parseFloat(style.scrollPaddingLeft) || 0);
+  const tail = Math.max(0, Math.ceil(strip.clientWidth - lastWidth - rightPadding - snapStartInset + 1));
+  strip.style.setProperty("--strip-tail", `${tail}px`);
+  const refreshed = stripSnapStops(strip);
+  const updatedMax = Math.max(0, strip.scrollWidth - strip.clientWidth);
+  state.stops = refreshed.map(stop => Math.max(0, Math.min(stop, updatedMax)));
+  state.items = items;
+};
+const renderStripPosition = state => {
+  const { strip, items, controls } = state;
+  if (!items.length || storyMode.matches) return 0;
+  if (!state.stops?.length) refreshStripLayout(state);
+  const scrollLeft = strip.scrollLeft;
+  let index = 0;
+  let distance = Infinity;
+  state.stops.forEach((stop, candidate) => {
+    const nextDistance = Math.abs(scrollLeft - stop);
+    if (nextDistance < distance) { distance = nextDistance; index = candidate; }
+  });
+  if (index === state.index) return index;
+  if (state.position) {
+    state.position.textContent = `${index + 1} / ${items.length}`;
+    state.position.setAttribute("aria-label", `Screen ${index + 1} of ${items.length}`);
+  }
+  state.previous?.setAttribute("aria-disabled", String(index === 0));
+  state.next?.setAttribute("aria-disabled", String(index === items.length - 1));
+  items.forEach((item, candidate) => {
+    if (candidate === index) item.setAttribute("aria-current", "step");
+    else item.removeAttribute("aria-current");
+  });
+  state.index = index;
+  return index;
+};
+const goToStripIndex = (state, index) => {
+  const target = Math.max(0, Math.min(state.items.length - 1, index));
+  const stop = state.stops[target];
+  if (stop === undefined) return;
+  state.strip.scrollTo({ left: stop, behavior: "auto" });
+  renderStripPosition(state);
+};
+const refreshAllStrips = () => stripStates.forEach(state => {
+  refreshStripLayout(state);
+  if (!storyMode.matches) renderStripPosition(state);
+});
 for (const strip of $$(".steps")) {
-  const output = strip.parentElement?.querySelector(".strip-at");
-  if (!output) continue;
-  let scrollQueued = false;
+  const items = Array.from(strip.children).filter(item => item.matches(".step"));
+  if (items.length < 2) continue;
+  const controls = strip.parentElement?.querySelector("[data-strip-controls]");
+  const state = {
+    strip,
+    items,
+    controls,
+    position: controls?.querySelector("[data-strip-position]"),
+    previous: controls?.querySelector('[data-strip-step="-1"]'),
+    next: controls?.querySelector('[data-strip-step="1"]'),
+    stops: [],
+    index: null,
+    scrollQueued: false,
+  };
+  stripStates.set(strip, state);
+  controls?.addEventListener("click", event => {
+    const button = event.target.closest?.("[data-strip-step]");
+    if (!button || button.getAttribute("aria-disabled") === "true") return;
+    goToStripIndex(state, renderStripPosition(state) + Number(button.dataset.stripStep));
+  });
+  strip.addEventListener("keydown", event => {
+    if (event.target !== strip) return;
+    const current = renderStripPosition(state);
+    let target;
+    if (event.key === "ArrowRight") target = current + 1;
+    else if (event.key === "ArrowLeft") target = current - 1;
+    else if (event.key === "Home") target = 0;
+    else if (event.key === "End") target = items.length - 1;
+    else return;
+    event.preventDefault();
+    goToStripIndex(state, target);
+  });
   strip.addEventListener("scroll", () => {
-    if (scrollQueued) return;
-    scrollQueued = true;
+    if (state.scrollQueued) return;
+    state.scrollQueued = true;
     requestAnimationFrame(() => {
-      const first = strip.firstElementChild;
-      const gap = parseFloat(getComputedStyle(strip).columnGap || getComputedStyle(strip).gap || "0");
-      const width = first ? first.getBoundingClientRect().width + gap : 1;
-      output.textContent = String(Math.min(strip.children.length, Math.round(strip.scrollLeft / Math.max(width, 1)) + 1));
-      scrollQueued = false;
+      state.scrollQueued = false;
+      renderStripPosition(state);
     });
   }, { passive: true });
 }

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en" data-scheme="light" data-tone="parchment">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f1ecdf" />
+    <meta
+      name="description"
+      content="This page could not be found. Start from the Daymark home page."
+    />
+    <title>Page not found — Daymark</title>
+    <link rel="icon" href="/assets/favicon.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" sizes="180x180" />
+    <script>
+      try {
+        const choice = sessionStorage.getItem("daymark-paper");
+        if (choice === "dark" || choice === "light") document.documentElement.dataset.scheme = choice;
+      } catch { /* The page works without storage. */ }
+    </script>
+    <link rel="stylesheet" href="/styles.css" />
+    <script defer src="/app.js"></script>
+    <meta name="robots" content="noindex" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Daymark" />
+    <meta property="og:title" content="Page not found — Daymark" />
+    <meta property="og:description" content="This page could not be found. Start from the Daymark home page." />
+    <meta property="og:url" content="https://uvilla11.github.io/daymark-site/404.html" />
+    <meta property="og:image" content="https://uvilla11.github.io/daymark-site/assets/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="/" aria-label="Daymark home">
+          <img src="/assets/daymark-app-icon.png" width="38" height="38" alt="" />
+          <span>Daymark</span>
+        </a>
+        <nav class="primary-nav" aria-label="Main navigation">
+          <a href="/#journey">The daybook</a>
+          <a href="/#surfaces">What it holds</a>
+          <a href="/privacy/">Privacy</a>
+          <a href="/support/">Support</a>
+        </nav>
+        <div class="header-actions">
+          <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false" hidden>Try night paper</button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="reading-hero" aria-labelledby="page-title">
+        <div class="reading-hero-inner">
+          <h1 id="page-title">This page isn’t in the daybook.</h1>
+          <p>The link may be old or mistyped. Everything about Daymark starts on the home page.</p>
+        </div>
+      </section>
+      <div class="reading-content">
+        <a class="page-back" href="/">← Back to Daymark</a>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <a class="brand brand-footer" href="/" aria-label="Daymark home">
+          <img src="/assets/daymark-app-icon.png" width="32" height="32" alt="" />
+          <span>Daymark</span>
+        </a>
+        <p>A quiet daybook for the days that matter.</p>
+        <nav aria-label="Footer navigation">
+          <a href="/privacy/">Privacy</a>
+          <a href="/support/">Support</a>
+          <a href="/">Home</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

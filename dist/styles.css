@@ -855,3 +855,16 @@ html.tone-cut, html.tone-cut *, html.tone-cut *::before, html.tone-cut *::after 
   }
   .deck-screen, .deck-screen img, .nav-bead, .reading-progress span { will-change: auto; }
 }
+
+/* Keyboard shortcut keys on the support page. */
+kbd {
+  display: inline-block;
+  min-width: 1.6em;
+  padding: 1px 6px;
+  border: 1px solid var(--rule);
+  border-bottom-width: 2px;
+  border-radius: 6px;
+  font: 600 .88em/1.4 ui-sans-serif, system-ui, -apple-system, sans-serif;
+  text-align: center;
+  white-space: nowrap;
+}

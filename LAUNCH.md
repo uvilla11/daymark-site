@@ -4,6 +4,8 @@ Everything here must be done before the site is announced or linked from the App
 
 ## ⚠️ Screenshots are out of date
 
+**Status: on hold until the app’s UI polish and refinement are complete.**
+
 The tour uses captures from October 19, 2026. The app has changed since then and more UI work is
 planned, so **recapture every screenshot once the UI settles, and before launch**. Today alone has a new
 Next up card (line art, countdown, "Also at"), a new weather band (larger icon, ↑/↓ high and low, hourly
@@ -25,9 +27,8 @@ All in `src/site.json`:
 
 - `url`: the real domain, if you move off GitHub Pages. Canonical links, sharing tags, the sitemap, and
   robots follow it.
-- `supportEmail`: a real support address. Until it is set, Support and Privacy say a contact address is
-  not yet available.
-- `appStoreId`: the numeric App Store ID. When set, "Coming soon to the App Store" becomes a download
+- `supportEmail`: done, `daymark.app.support@gmail.com` (set November 6, 2026).
+- `appStoreId`: **pending App Store launch.** The numeric App Store ID. When set, "Coming soon to the App Store" becomes a download
   link and the Smart App Banner turns on.
 - `updated`: the date the privacy policy last changed.
 

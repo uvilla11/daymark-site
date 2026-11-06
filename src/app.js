@@ -63,6 +63,10 @@ const kick = animate => {
 const themeToggle = document.querySelector("[data-theme-toggle]");
 const DARK_PALETTE = new Set(["predawn", "nightfall", "night"]);
 let paletteOverride = null;
+try {
+  const savedPaper = sessionStorage.getItem("daymark-paper");
+  if (savedPaper === "light" || savedPaper === "dark") paletteOverride = savedPaper;
+} catch { /* A storage restriction should not disable the theme control. */ }
 const paletteIsDark = () => root.dataset.scheme === "dark" || DARK_PALETTE.has(root.dataset.tone);
 const updateThemeToggle = () => {
   if (!themeToggle) return;
@@ -75,6 +79,7 @@ if (themeToggle) {
   updateThemeToggle();
   themeToggle.addEventListener("click", () => {
     paletteOverride = paletteIsDark() ? "light" : "dark";
+    try { sessionStorage.setItem("daymark-paper", paletteOverride); } catch { /* Keep this page working. */ }
     root.dataset.scheme = paletteOverride;
     applyCurrentTone();
   });
@@ -87,7 +92,6 @@ const TONES = Object.keys(TONE_NAMES);
 const DARK_TONE = { predawn: "predawn", dawn: "predawn", parchment: "night", dusk: "nightfall", nightfall: "night", night: "night" };
 const LIGHT_TONE = { predawn: "dawn", nightfall: "dusk", night: "parchment" };
 const phaseInputs = $$('input[name="phase"]');
-const phaseNowLabels = $$('[data-phase-now]');
 const phaseName = document.querySelector("[data-phase-name]");
 const phaseFrames = $$('[data-phase-frame]');
 let phaseChosen = false;
@@ -110,7 +114,6 @@ const clockTone = () => daylightTone(new Date());
 const displayTone = tone => paletteOverride === "dark" ? DARK_TONE[tone] || tone : paletteOverride === "light" ? LIGHT_TONE[tone] || tone : tone;
 const refreshPhase = tone => {
   phaseInputs.forEach(input => { input.checked = input.value === tone; });
-  phaseNowLabels.forEach(label => { label.hidden = label.closest(".phase-choice")?.querySelector('input[name="phase"]')?.value !== clockTone(); });
   const frameShell = document.querySelector(".daylight-screen");
   frameShell?.setAttribute("data-ready", "true");
   phaseFrames.forEach(frame => {
@@ -243,6 +246,11 @@ const escapeHTML = value => String(value).replace(/[&<>"']/g, character => ({
 // trailing edge catches up on the longer one. The top line mirrors reading.
 const navTrack = document.querySelector("[data-nav-track]");
 const navScroll = document.querySelector(".chapter-index");
+const siteHeader = document.querySelector(".site-header");
+const updateStickyGeometry = () => {
+  if (siteHeader) root.style.setProperty("--site-header-height", `${Math.ceil(siteHeader.getBoundingClientRect().height)}px`);
+  if (navScroll) root.style.setProperty("--chapter-nav-height", `${Math.ceil(navScroll.getBoundingClientRect().height)}px`);
+};
 const navLinks = navTrack ? $$('a[href^="#"]', navTrack) : [];
 const bead = document.querySelector(".nav-bead");
 const beadLeading = spring(0);
@@ -295,11 +303,15 @@ const chapterHeads = $$('.story-flow .chapter-head');
 const clearCardMotion = () => storyCards.forEach(card => {
   card.style.removeProperty('--card-opacity');
 });
-// The sticky heading masks the covered top of each card. Keep the remaining
-// copy opaque and fade only its last 24px as the trailing edge passes under it.
+// Each card leaves before any of its readable text is covered by the sticky
+// chapter heading. Drive opacity from the leading edge, not the trailing edge:
+// a trailing-edge fade exposes clipped, mid-sentence fragments on reverse scroll.
 const paintCards = viewport => {
   if (root.dataset.storyMode !== 'desktop') return null;
-  const fadeRange = 24;
+  const exitStart = 12;
+  const exitEnd = -52;
+  const enterDistance = 110;
+  const ease = value => value * value * (3 - 2 * value);
   let visibleScreen = null;
   let nearestDistance = Infinity;
   let largestExposure = 0;
@@ -307,15 +319,17 @@ const paintCards = viewport => {
     const rect = card.getBoundingClientRect();
     const header = card.closest('.chapter')?.querySelector('.chapter-head');
     const headerEdge = header?.getBoundingClientRect().bottom ?? 0;
+    const leadingClearance = rect.top - headerEdge;
+    const exitOpacity = Math.max(0, Math.min(1, (leadingClearance - exitEnd) / (exitStart - exitEnd)));
+    const enterOpacity = Math.max(0, Math.min(1, (viewport - rect.top) / enterDistance));
+    const opacity = Math.min(ease(exitOpacity), ease(enterOpacity));
     if (root.dataset.cardMotion === 'on') {
-      const trailingClearance = rect.bottom - headerEdge;
-      const opacity = Math.max(0, Math.min(1, trailingClearance / fadeRange));
       card.style.setProperty('--card-opacity', opacity.toFixed(3));
     }
     const exposedTop = Math.max(rect.top, headerEdge, 0);
     const exposedBottom = Math.min(rect.bottom, viewport);
     const exposedHeight = Math.max(0, exposedBottom - exposedTop);
-    if (!exposedHeight) return;
+    if (!exposedHeight || opacity < .08) return;
     const availableTop = Math.max(0, Math.min(headerEdge, viewport));
     const readingLine = availableTop + (viewport - availableTop) * .32;
     const distance = readingLine < exposedTop ? exposedTop - readingLine : readingLine > exposedBottom ? readingLine - exposedBottom : 0;
@@ -408,6 +422,7 @@ const schedule = () => {
   requestAnimationFrame(update);
 };
 const measure = () => {
+  updateStickyGeometry();
   walkBands = walkers.map(toBand);
   screenBands = storyMode.matches ? storyStops.map(toBand) : [];
   refreshAllStrips();
@@ -526,8 +541,8 @@ const renderStripPosition = state => {
     state.position.textContent = `${index + 1} / ${items.length}`;
     state.position.setAttribute("aria-label", `Screen ${index + 1} of ${items.length}`);
   }
-  state.previous?.setAttribute("aria-disabled", String(index === 0));
-  state.next?.setAttribute("aria-disabled", String(index === items.length - 1));
+  if (state.previous) state.previous.disabled = index === 0;
+  if (state.next) state.next.disabled = index === items.length - 1;
   items.forEach((item, candidate) => {
     if (candidate === index) item.setAttribute("aria-current", "step");
     else item.removeAttribute("aria-current");
@@ -539,7 +554,7 @@ const goToStripIndex = (state, index) => {
   const target = Math.max(0, Math.min(state.items.length - 1, index));
   const stop = state.stops[target];
   if (stop === undefined) return;
-  state.strip.scrollTo({ left: stop, behavior: "auto" });
+  state.strip.scrollTo({ left: stop, behavior: motionOK.matches ? "smooth" : "auto" });
   renderStripPosition(state);
 };
 const refreshAllStrips = () => stripStates.forEach(state => {
@@ -564,7 +579,7 @@ for (const strip of $$(".steps")) {
   stripStates.set(strip, state);
   controls?.addEventListener("click", event => {
     const button = event.target.closest?.("[data-strip-step]");
-    if (!button || button.getAttribute("aria-disabled") === "true") return;
+    if (!button || button.disabled) return;
     goToStripIndex(state, renderStripPosition(state) + Number(button.dataset.stripStep));
   });
   strip.addEventListener("keydown", event => {
@@ -726,6 +741,11 @@ motionOK.addEventListener("change", () => {
 });
 storyMode.addEventListener("change", applyMode);
 window.addEventListener("resize", measure, { passive: true });
+if ("ResizeObserver" in window) {
+  const stickyObserver = new ResizeObserver(() => { updateStickyGeometry(); schedule(); });
+  if (siteHeader) stickyObserver.observe(siteHeader);
+  if (navScroll) stickyObserver.observe(navScroll);
+}
 function applyCurrentTone() {
   const tone = walkElement ? walkTone(walkElement) : currentLogicalTone;
   setTone(tone);

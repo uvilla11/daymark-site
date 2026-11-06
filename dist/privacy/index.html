@@ -11,6 +11,12 @@
     <title>Privacy — Daymark</title>
     <link rel="icon" href="/assets/favicon.png" type="image/png" sizes="32x32" />
     <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" sizes="180x180" />
+    <script>
+      try {
+        const choice = sessionStorage.getItem("daymark-paper");
+        if (choice === "dark" || choice === "light") document.documentElement.dataset.scheme = choice;
+      } catch { /* The page works without storage. */ }
+    </script>
     <link rel="stylesheet" href="/styles.css" />
     <script defer src="/app.js"></script>
   </head>
@@ -37,8 +43,7 @@
     <main id="main">
       <section class="reading-hero" aria-labelledby="page-title">
         <div class="reading-hero-inner">
-          <p class="eyebrow">A CLEAR ACCOUNT</p>
-          <h1 id="page-title">Privacy, with the edges shown.</h1>
+          <h1 id="page-title">How Daymark handles your data.</h1>
           <p>
             Daymark keeps your daybook on your device. It has no Daymark account, analytics, cloud sync, or
             remote AI service. Some features you choose use other services; this page names them plainly.

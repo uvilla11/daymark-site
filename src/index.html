@@ -14,7 +14,10 @@
         const root = document.documentElement;
         const target = decodeURIComponent(location.hash.slice(1));
         if (target) root.dataset.deepTarget = target;
-        root.dataset.scheme = "light";
+        try {
+          const choice = sessionStorage.getItem("daymark-paper");
+          if (choice === "dark" || choice === "light") root.dataset.scheme = choice;
+        } catch { /* Session storage may be unavailable in private browsing. */ }
       })();
     </script>
     <script defer src="/app.js"></script>
@@ -85,7 +88,7 @@
 
       <section class="surface-section" id="surfaces" data-walk="dawn" data-index="today" aria-labelledby="surfaces-title">
         <div class="section-heading section-pad section-heading-inline">
-          <div><h2 id="surfaces-title">A little room for each part of the day.</h2></div>
+          <div><h2 id="surfaces-title">See how Daymark works, page by page.</h2></div>
           <p>Real Daymark screens. Sample details are labeled where they appear.</p>
         </div>
         <nav class="chapter-index" aria-label="Daymark pages">
@@ -130,7 +133,7 @@
       <section class="daylight-section section-pad" id="daylight" data-walk="daylight" aria-labelledby="daylight-title">
         <div class="daylight-copy">
           <h2 id="daylight-title">The paper follows the day.</h2>
-          <p>The same Today screen moves from first light to late night with the sun. Daylight follows sunrise and sunset in your selected weather city, or a plain 6:30 to 6:30 day without a forecast.</p>
+          <p>Six real captures, from predawn to late night. In the app, Daylight follows your selected weather city's sunrise and sunset; without a forecast, it uses a 6:30 a.m. to 6:30 p.m. schedule. Choose a tone to preview it here.</p>
           <fieldset class="phase-picker">
             <legend>Choose one of six captured tones</legend>
             {{PHASE_CONTROLS}}
@@ -158,11 +161,11 @@
 
       <section class="closing-section" aria-labelledby="closing-title">
         <div class="closing-inner">
-          <h2 id="closing-title">A quieter way to keep your days.</h2>
+          <h2 id="closing-title">Plan today. Remember the week.</h2>
           <p>Coming soon to the App Store.</p>
           <div class="closing-links">
             <a class="button button-light" href="#top">Back to the beginning <span aria-hidden="true">↑</span></a>
-            <a class="text-link text-link-light" href="/support/">Read support notes <span aria-hidden="true">↗</span></a>
+            <a class="text-link text-link-light" href="/support/">Browse common questions <span aria-hidden="true">↗</span></a>
           </div>
         </div>
       </section>

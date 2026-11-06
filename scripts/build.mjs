@@ -41,9 +41,9 @@ const chapters = data.chapters.map((chapter, chapterIndex) => `
     </header>
     ${chapter.steps.length > 1 ? `
     <div class="strip-controls" data-strip-controls role="group" aria-label="${esc(chapter.nav)} screen controls" hidden>
-      <button class="strip-control" type="button" data-strip-step="-1" aria-controls="${esc(chapter.id)}-screens" aria-label="Previous screen" aria-disabled="true"><span class="strip-control-arrow" aria-hidden="true">←</span><span>Previous</span></button>
+      <button class="strip-control" type="button" data-strip-step="-1" aria-controls="${esc(chapter.id)}-screens" aria-label="Previous screen" disabled><span class="strip-control-arrow" aria-hidden="true">←</span><span>Previous</span></button>
       <output class="strip-position" data-strip-position aria-live="polite" aria-atomic="true" aria-label="Screen 1 of ${chapter.steps.length}">1 / ${chapter.steps.length}</output>
-      <button class="strip-control" type="button" data-strip-step="1" aria-controls="${esc(chapter.id)}-screens" aria-label="Next screen" aria-disabled="false"><span>Next</span><span class="strip-control-arrow" aria-hidden="true">→</span></button>
+      <button class="strip-control" type="button" data-strip-step="1" aria-controls="${esc(chapter.id)}-screens" aria-label="Next screen"><span>Next</span><span class="strip-control-arrow" aria-hidden="true">→</span></button>
     </div>` : ""}
     <ol class="steps" id="${esc(chapter.id)}-screens"${chapter.steps.length > 1 ? ' tabindex="0"' : ""} aria-label="${esc(chapter.nav)} screens">
       ${chapter.steps.map((step, index) => `
@@ -87,7 +87,7 @@ const phaseControls = data.phases.map((phase, index) => `
   <label class="phase-choice" data-phase-choice="${esc(phase.id)}">
     <input type="radio" name="phase" value="${esc(phase.id)}"${index === 1 ? " checked" : ""} />
     <span class="phase-swatch" data-tone="${esc(phase.id)}" aria-hidden="true"></span>
-    <span class="phase-name">${esc(phase.name)}<small data-phase-now${index === 1 ? "" : " hidden"}>Now</small></span>
+    <span class="phase-name">${esc(phase.name)}</span>
     <span class="phase-when">${esc(phase.when)}</span>
   </label>`).join("\n");
 const phaseFrames = data.phases.map(phase => `

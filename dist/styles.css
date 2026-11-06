@@ -15,6 +15,8 @@
   --page: min(1280px, calc(100% - 80px));
   --ease-out: cubic-bezier(.22, 1, .36, 1);
   --ease-soft: cubic-bezier(.25, .7, .2, 1);
+  --site-header-height: 79px;
+  --chapter-nav-height: 71px;
   font-family: var(--sans);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -170,7 +172,7 @@ input:focus-visible + span,
 .chapter-index {
   position: sticky;
   z-index: 12;
-  top: 79px;
+  top: var(--site-header-height);
   width: 100%;
   margin: 0 auto 16px;
   padding-inline: max(32px, calc((100% - 1160px) / 2));
@@ -519,8 +521,8 @@ html[data-hero-motion="on"] .hero-product-plane { will-change: transform; }
   font-weight: 560;
   transition: color 180ms ease, border-color 180ms ease, background-color 240ms ease;
 }
-.strip-control:hover:not([aria-disabled="true"]) { border-color: var(--ember); color: var(--ember); }
-.strip-control[aria-disabled="true"] { color: var(--muted); cursor: default; opacity: .55; }
+.strip-control:hover:not(:disabled) { border-color: var(--ember); color: var(--ember); }
+.strip-control:disabled { color: var(--muted); cursor: default; opacity: .55; }
 .strip-control-arrow { font-size: 16px; line-height: 1; }
 .strip-position { min-width: 62px; color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; text-align: center; }
 .strip-hint { display: none; margin: 0 0 20px; color: var(--muted); font-size: 13px; }
@@ -583,7 +585,7 @@ html[data-hero-motion="on"] .hero-product-plane { will-change: transform; }
 .daylight-copy { margin: 0; }
 .phase-picker { margin: 26px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 7px; border: 0; }
 .phase-picker legend { margin-bottom: 10px; color: var(--muted); font-size: 13px; font-weight: 580; }
-.phase-choice { min-width: 0; min-height: 72px; display: grid; grid-template-columns: 20px minmax(0,1fr); column-gap: 8px; padding: 9px 8px; align-content: center; align-items: center; border: 1px solid color-mix(in srgb, var(--rule), transparent 50%); border-radius: 5px; background: color-mix(in srgb, var(--paper) 70%, transparent); cursor: pointer; transition: background-color 240ms ease, border-color 240ms ease, color 240ms ease, transform 240ms var(--ease-out); }
+.phase-choice { min-width: 0; min-height: 84px; display: grid; grid-template-columns: 20px minmax(0,1fr); column-gap: 9px; padding: 12px 10px; align-content: center; align-items: center; border: 1px solid color-mix(in srgb, var(--rule), transparent 50%); border-radius: 5px; background: color-mix(in srgb, var(--paper) 70%, transparent); cursor: pointer; transition: background-color 240ms ease, border-color 240ms ease, color 240ms ease, transform 240ms var(--ease-out); }
 .phase-choice:hover { background: color-mix(in srgb, var(--paper), transparent 52%); }
 .phase-choice input { position: absolute; width: 1px; height: 1px; opacity: 0; }
 .phase-swatch { grid-row: span 2; width: 20px; height: 20px; border: 1px solid color-mix(in srgb, var(--ink), transparent 65%); border-radius: 50%; background: var(--swatch); transition: outline-color 220ms ease, transform 250ms var(--ease-out); }
@@ -598,9 +600,8 @@ html[data-hero-motion="on"] .hero-product-plane { will-change: transform; }
 .phase-choice:has(input:checked) .phase-swatch { outline: 2px solid var(--ember); outline-offset: 2px; }
 .phase-choice:has(input:checked) .phase-swatch { transform: scale(1.08); }
 .phase-choice input:focus-visible + .phase-swatch { outline: 3px solid var(--ember); outline-offset: 3px; }
-.phase-name { min-width: 0; display: flex; align-items: center; gap: 5px; font-size: 13px; font-weight: 550; }
-.phase-name small { color: var(--ember); font-size: 9px; font-weight: 750; letter-spacing: .04em; text-transform: uppercase; }
-.phase-when { grid-column: 2; color: var(--muted); font-size: 11px; line-height: 1.35; }
+.phase-name { min-width: 0; display: flex; align-items: center; gap: 5px; font-size: 14px; font-weight: 580; }
+.phase-when { grid-column: 2; color: var(--muted); font-size: 13px; line-height: 1.4; }
 .daylight-figure { position: relative; isolation: isolate; width: min(100%, 360px); justify-self: center; }
 .daylight-figure::before { position: absolute; z-index: -1; inset: 8% -12% 14%; border-radius: 50%; background: radial-gradient(ellipse, color-mix(in srgb, var(--ember-soft) 34%, transparent), transparent 68%); content: ""; }
 .daylight-screen { position: relative; }
@@ -651,7 +652,6 @@ html.tone-cut, html.tone-cut *, html.tone-cut *::before, html.tone-cut *::after 
 .reading-hero { padding: clamp(68px, 8vw, 104px) 32px 52px; background: var(--paper-deep); }
 .reading-hero-inner { width: min(900px, 100%); margin-inline: auto; }
 .reading-hero h1 { margin: 0 0 21px; font: clamp(48px, 6.2vw, 80px)/1.04 var(--serif); letter-spacing: -.035em; font-weight: 400; text-wrap: balance; }
-.eyebrow { margin: 0 0 18px; color: var(--muted); font-size: 14px; font-weight: 500; letter-spacing: 0; }
 .reading-hero p:last-child { max-width: 730px; margin: 0; color: var(--muted); font: 20px/1.6 var(--serif); }
 .reading-content { width: min(900px, calc(100% - 64px)); margin: 0 auto; padding: 35px 0 90px; }
 .reading-content section { padding: 36px 0; border-bottom: 1px solid var(--rule); scroll-margin-top: 112px; }
@@ -686,7 +686,7 @@ html.tone-cut, html.tone-cut *, html.tone-cut *::before, html.tone-cut *::after 
   html.js-ready[data-story-mode="desktop"] .chapter { position: relative; padding: 30px 0 86px; }
   html.js-ready[data-story-mode="desktop"] .chapter-head {
     position: sticky;
-    top: 150px;
+    top: calc(var(--site-header-height) + var(--chapter-nav-height));
     z-index: 8;
     opacity: var(--heading-opacity, 1);
     display: block;
@@ -718,7 +718,12 @@ html.tone-cut, html.tone-cut *, html.tone-cut *::before, html.tone-cut *::after 
     transition: border-color 400ms ease, background-color 560ms var(--ease-soft);
   }
   .strip-controls { display: none !important; }
-  html.js-ready[data-story-mode="desktop"] .steps { display: block; }
+  /* Give the first card in each chapter room to breathe before its exit fade.
+     Roughly half a card of space; following cards keep their existing rhythm. */
+  html.js-ready[data-story-mode="desktop"] .steps {
+    display: block;
+    padding-top: clamp(130px, 17vh, 180px);
+  }
 }
 
 @media (min-width: 981px) and (min-height: 850px) {
@@ -727,11 +732,11 @@ html.tone-cut, html.tone-cut *, html.tone-cut *::before, html.tone-cut *::after 
 
 @media (max-width: 980px), (max-height: 619px) {
   :root { --page: calc(100% - 40px); }
-  html { scroll-padding-top: 130px; }
+  html { scroll-padding-top: calc(var(--site-header-height) + 12px); }
   .header-inner { min-height: 70px; gap: 16px; }
   .page-nav { order: 3; width: 100%; flex: 1 0 100%; overflow-x: auto; scrollbar-width: none; }
   .primary-nav { order: 3; width: 100%; flex: 1 0 100%; overflow-x: auto; gap: 18px; }
-  .chapter-index { top: 118px; padding-inline: 20px; }
+  .chapter-index { top: var(--site-header-height); padding-inline: 20px; }
   .page-nav::-webkit-scrollbar { display: none; }
   .page-nav-track { min-height: 44px; gap: 24px; }
   .nav-bead { bottom: 0; }
@@ -810,12 +815,12 @@ html.tone-cut, html.tone-cut *, html.tone-cut *::before, html.tone-cut *::after 
   .step-copy { padding: 23px 21px; }
   .step-sequence { font-size: 12px; margin-bottom: 14px !important; }
   .step-copy .step-summary { font-size: 16px; }
-  .step-copy .step-detail { font-size: 14px; }
+  .step-copy .step-detail { font-size: 15px; }
   .phase-picker { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 7px; }
   .journey-section { padding-block: 62px; }
   .journey-list a { min-height: 162px; padding: 18px; }
   .journey-name { font-size: 29px; }
-  .journey-note { font-size: 13px; }
+  .journey-note { font-size: 14px; }
   .desktop-break { display: none; }
   .section-heading-inline { width: var(--page); flex-direction: column; align-items: flex-start; gap: 12px; }
   .surface-section { padding-top: 58px; }
@@ -828,7 +833,7 @@ html.tone-cut, html.tone-cut *, html.tone-cut *::before, html.tone-cut *::after 
   .reading-hero { padding-inline: 20px; }
   .reading-content { width: calc(100% - 40px); }
   .reading-hero p:last-child { font-size: 18px; }
-  .reading-content p, .reading-content li { font-size: 15px; }
+  .reading-content p, .reading-content li { font-size: 16px; }
 }
 
 @media (max-width: 360px) {

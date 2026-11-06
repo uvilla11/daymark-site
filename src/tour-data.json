@@ -44,7 +44,7 @@
       ]
     },
     {
-      "id": "shelf", "nav": "Shelf", "tone": "dusk", "title": "Keep what deserves to stay.",
+      "id": "shelf", "nav": "Shelf", "tone": "dusk", "title": "Save what you want to find again.",
       "intro": "Notes, links, and images in one place. Share from another app and it lands on the Shelf the next time you open Daymark.",
       "steps": [
         {"id":"shelf","asset":"shelf.webp","alt":"Shelf with sample notes and images, search, filters, and tags.","title":"Filter by kind or tag.","body":"Pin what should stay on top, and tag entries so they are easy to gather again.","detail":"Collect the small things you want to remember and give them just enough structure to find them later.","label":"Sample day","caption":"Shelf"},
@@ -58,7 +58,7 @@
       "steps": [
         {"id":"ask-brief","asset":"ask-brief.webp","alt":"Ask Daymark in Daybook mode answering Brief me with sample events, tasks, and rituals.","title":"A brief from the day you have.","body":"Ask for the day’s shape and get an answer from the events, tasks, rituals, focus, and weather already in Daymark.","detail":"The answer is informed by the records already in your daybook, so a question can become a useful place to begin.","label":"Sample day","caption":"Ask Daymark"},
         {"id":"gemma-task","asset":"gemma-task.webp","alt":"Ask Daymark on a physical iPhone turning a request to remember to water plants into a typed task action receipt.","title":"From phrase to typed action.","body":"With the optional Gemma 4 model, a loose sentence can produce a typed action and reviewable receipt. Daymark validates and writes the change.","detail":"The model interprets the request, but the app remains responsible for validating the action before it becomes part of your daybook.","label":"Example content","caption":"Gemma 4 Fast · iPhone"},
-        {"id":"gemma-grounded","asset":"gemma-grounded.webp","alt":"Ask Daymark on a physical iPhone answering what to do first from an explicitly selected sample daybook.","title":"Grounded by default.","body":"In Daybook mode, answers come from your actual day, and each reply is tagged with the mode that wrote it.","detail":"The visible mode helps distinguish answers drawn from your records from an open-ended conversation.","label":"Example content","caption":"Gemma 4 Fast · iPhone"},
+        {"id":"gemma-grounded","asset":"gemma-grounded.webp","alt":"Ask Daymark on a physical iPhone answering what to do first from an explicitly selected sample daybook.","title":"Answers from your daybook.","body":"In Daybook mode, answers come from your actual day, and each reply is tagged with the mode that wrote it.","detail":"The visible mode helps distinguish answers drawn from your records from an open-ended conversation.","label":"Example content","caption":"Gemma 4 Fast · iPhone"},
         {"id":"open-chat","asset":"open-chat.webp","alt":"Ask Daymark in Open chat mode with sample suggestions, a Web control, and the Fast on-device model selected.","title":"Open conversation, on request.","body":"Switch to Open chat for general questions. Web search is off unless you turn it on.","detail":"General conversation is available separately from daybook questions, with network search remaining an explicit choice.","label":"Product UI","caption":"Open chat"}
       ]
     },

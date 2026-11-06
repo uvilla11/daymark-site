@@ -278,29 +278,25 @@ const storyStops = $$('.story-flow [data-screen]');
 const storyCards = storyStops.map(stop => stop.querySelector('.step-copy')).filter(Boolean);
 const chapterHeads = $$('.story-flow .chapter-head');
 const clearCardMotion = () => storyCards.forEach(card => {
-  for (const property of ['--card-opacity', '--card-shift', '--card-tilt', '--card-scale']) card.style.removeProperty(property);
+  for (const property of ['--card-opacity', '--card-shift']) card.style.removeProperty(property);
 });
-// The text cards follow a quiet, continuous rolodex: the card nearest the
-// reading line resolves into focus while its neighbors ease toward the paper.
-// This only changes presentation; all content remains in the reading order.
+// Cards crossfade as they pass through the reading area. They must disappear
+// *before* entering the pinned chapter header; masking by card center alone
+// allowed large, partly severed letters to show while scrolling backwards.
 const paintCards = viewport => {
   if (root.dataset.cardMotion !== 'on') return;
   const readingLine = viewport * .69;
   const spread = Math.max(420, viewport * .78);
-  const positions = storyCards.map(card => {
+  storyCards.forEach(card => {
     const rect = card.getBoundingClientRect();
-    return (rect.top + rect.bottom) / 2;
-  });
-  storyCards.forEach((card, index) => {
-    const delta = positions[index] - readingLine;
+    const delta = (rect.top + rect.bottom) / 2 - readingLine;
     const proximity = Math.max(0, Math.min(1, 1 - Math.abs(delta) / spread));
     const eased = proximity * proximity * (3 - 2 * proximity);
-    // Retired cards fade completely before reaching the fixed navigation.
-    const aboveMask = Math.max(0, Math.min(1, (positions[index] - viewport * .24) / (viewport * .22)));
-    card.style.setProperty('--card-opacity', ((.42 + .58 * eased) * aboveMask).toFixed(3));
-    card.style.setProperty('--card-shift', `${((1 - eased) * (delta >= 0 ? 24 : -16)).toFixed(1)}px`);
-    card.style.setProperty('--card-tilt', `${((1 - eased) * (delta >= 0 ? -2.1 : 2.1)).toFixed(2)}deg`);
-    card.style.setProperty('--card-scale', (.98 + .02 * eased).toFixed(4));
+    const header = card.closest('.chapter')?.querySelector('.chapter-head');
+    const headerEdge = header?.getBoundingClientRect().bottom ?? 0;
+    const clearOfHeader = Math.max(0, Math.min(1, (rect.top - headerEdge - 32) / 90));
+    card.style.setProperty('--card-opacity', ((.68 + .32 * eased) * clearOfHeader).toFixed(3));
+    card.style.setProperty('--card-shift', `${((1 - eased) * (delta >= 0 ? 12 : -8)).toFixed(1)}px`);
   });
 };
 // As one sticky chapter makes way for the next, dissolve its heading before

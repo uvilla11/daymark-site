@@ -36,7 +36,6 @@ const ledgerRows = data.ledger.rows.map((row, rowIndex) => {
 const chapters = data.chapters.map((chapter, chapterIndex) => `
   <section class="chapter" id="${esc(chapter.id)}" data-walk="${esc(chapter.tone)}" data-index="${esc(chapter.id)}" aria-labelledby="${esc(chapter.id)}-title">
     <header class="chapter-head">
-      <p class="chapter-kicker"><span>Chapter ${String(chapterIndex + 1).padStart(2, "0")}</span><span aria-hidden="true">—</span><span>${esc(chapter.nav)}</span></p>
       <h2 id="${esc(chapter.id)}-title">${esc(chapter.title)}</h2>
       <p>${esc(chapter.intro)}</p>
     </header>
@@ -48,11 +47,10 @@ const chapters = data.chapters.map((chapter, chapterIndex) => `
           <figcaption>${caption(step.label, step.caption)}</figcaption>
         </figure>
         <div class="step-copy">
-          <div class="step-topline"><span>${esc(chapter.nav)} / Page</span><span>${String(index + 1).padStart(2, "0")} <span aria-hidden="true">/</span> ${String(chapter.steps.length).padStart(2, "0")}</span></div>
+          ${chapter.steps.length > 1 ? `<p class="step-sequence" aria-label="Screen ${index + 1} of ${chapter.steps.length}">${index + 1} <span aria-hidden="true">/</span> ${chapter.steps.length}</p>` : ""}
           <h3>${esc(step.title)}</h3>
           <p class="step-summary">${esc(step.body)}</p>
           ${step.detail ? `<p class="step-detail">${esc(step.detail)}</p>` : ""}
-          ${step.highlights?.length ? `<ul class="step-highlights" aria-label="Features shown">${step.highlights.map(item => `<li>${esc(item)}</li>`).join("")}</ul>` : ""}
         </div>
       </li>`).join("\n")}
     </ol>

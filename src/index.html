@@ -1,16 +1,21 @@
 <!doctype html>
-<html lang="en" data-paper="day">
+<html lang="en" data-scheme="light" data-tone="dawn">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#f1ecdf" />
-    <meta
-      name="description"
-      content="Daymark is a quiet daybook for iPhone and iPad: plan the day, keep a practice, protect your focus, and review the week."
-    />
+    <meta name="theme-color" content="#f5ebe0" />
+    <meta name="description" content="Daymark is a quiet daybook for iPhone and iPad. Plan the day, keep a practice, protect your focus, and review the week." />
     <title>Daymark — Keep the days that matter</title>
     <link rel="icon" href="/assets/favicon.png" type="image/png" sizes="32x32" />
     <link rel="stylesheet" href="/styles.css" />
+    <script>
+      (() => {
+        const root = document.documentElement;
+        const target = decodeURIComponent(location.hash.slice(1));
+        if (target) root.dataset.deepTarget = target;
+        root.dataset.scheme = "light";
+      })();
+    </script>
     <script defer src="/app.js"></script>
   </head>
   <body>
@@ -22,30 +27,28 @@
           <span>Daymark</span>
         </a>
         <nav class="primary-nav" aria-label="Main navigation">
-          <a href="#journey">The daybook</a>
-          <a href="#surfaces">What it holds</a>
+          <a href="/#journey">The daybook</a>
+          <a href="/#surfaces">What it holds</a>
           <a href="/privacy/">Privacy</a>
           <a href="/support/">Support</a>
         </nav>
-        <button class="paper-toggle" type="button" data-paper-toggle hidden>
-          Try night paper
-        </button>
+        <div class="header-actions">
+          <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false" hidden>Try night paper</button>
+        </div>
       </div>
+      <div class="reading-progress" aria-hidden="true"><span data-progress></span></div>
     </header>
 
     <main id="main">
-      <section class="hero" id="top" aria-labelledby="hero-title">
+      <section class="hero" id="top" data-walk="dawn" data-index="today" aria-labelledby="hero-title">
         <div class="hero-inner">
           <div class="hero-copy">
-            <p class="eyebrow eyebrow-light"><span class="ember-dot"></span> A DAYBOOK FOR IPHONE AND IPAD</p>
+            <p class="hero-context">A daybook for iPhone and iPad</p>
             <h1 id="hero-title">Keep the days <em>that matter.</em></h1>
-            <p class="hero-lede">
-              Make a plan. Keep a practice. Give your attention a place to land. Then look back at the week
-              with something real to go on.
-            </p>
+            <p class="hero-lede">Plan today around the next event. Check in on rituals, focus on a task, and review the week from one place.</p>
             <div class="hero-actions">
               <a class="button button-light" href="#journey">Walk through Daymark <span aria-hidden="true">↓</span></a>
-              <a class="text-link text-link-light" href="/privacy/">See how privacy works <span aria-hidden="true">↗</span></a>
+              <a class="text-link text-link-light" href="/privacy/">Read the privacy details <span aria-hidden="true">↗</span></a>
             </div>
             <p class="availability">Coming soon to the App Store <span>·</span> iOS 18 or later</p>
             <div class="hero-loop" aria-label="The Daymark loop">
@@ -55,277 +58,102 @@
           </div>
           <figure class="hero-figure">
             <div class="device-frame device-frame-hero">
-              <img
-                src="/assets/today.webp"
-                width="920"
-                height="2000"
-                alt="Daymark Today screen with a labeled sample day, the next event, an open task list, and rituals."
-                fetchpriority="high"
-              />
+              <img src="/assets/today.webp" width="920" height="2000" alt="Daymark Today screen with a labeled sample day, the next event, open tasks, and rituals." fetchpriority="high" />
             </div>
             <figcaption><span class="sample-tag">Sample day</span> Example entries shown in the app.</figcaption>
           </figure>
         </div>
-        <div class="hero-edge" aria-hidden="true"><span>01</span><span>Open the day</span></div>
       </section>
 
-      <section class="journey-section section-pad" id="journey" aria-labelledby="journey-title">
+      <section class="journey-section section-pad" id="journey" data-walk="dawn" data-index="today" aria-labelledby="journey-title">
         <div class="section-heading section-heading-wide">
-          <p class="eyebrow">A SMALL, USEFUL LOOP</p>
           <h2 id="journey-title">A day has a beginning,<br class="desktop-break" /> a middle, and a place to end.</h2>
-          <p>
-            Daymark brings the parts of a daybook together around what you meant to do, what you did, and what
-            you want to carry into tomorrow.
-          </p>
+          <p>Daymark brings the parts of a daybook together around what you meant to do, what you did, and what you want to carry into tomorrow.</p>
         </div>
         <ol class="journey-list">
-          <li>
-            <a href="#today">
-              <span class="journey-number">01</span>
-              <span class="journey-name">Plan</span>
-              <span class="journey-note">See what is next.</span>
-              <span class="journey-arrow" aria-hidden="true">↘</span>
-            </a>
-          </li>
-          <li>
-            <a href="#rituals">
-              <span class="journey-number">02</span>
-              <span class="journey-name">Practice</span>
-              <span class="journey-note">Keep a small promise.</span>
-              <span class="journey-arrow" aria-hidden="true">↘</span>
-            </a>
-          </li>
-          <li>
-            <a href="#focus">
-              <span class="journey-number">03</span>
-              <span class="journey-name">Focus</span>
-              <span class="journey-note">Give one thing time.</span>
-              <span class="journey-arrow" aria-hidden="true">↘</span>
-            </a>
-          </li>
-          <li>
-            <a href="#review">
-              <span class="journey-number">04</span>
-              <span class="journey-name">Review</span>
-              <span class="journey-note">Notice what happened.</span>
-              <span class="journey-arrow" aria-hidden="true">↘</span>
-            </a>
-          </li>
+          <li><a href="#today"><span class="journey-number">01</span><span class="journey-name">Plan</span><span class="journey-note">See what is next.</span><span class="journey-arrow" aria-hidden="true">↘</span></a></li>
+          <li><a href="#rituals"><span class="journey-number">02</span><span class="journey-name">Practice</span><span class="journey-note">Keep a small promise.</span><span class="journey-arrow" aria-hidden="true">↘</span></a></li>
+          <li><a href="#focus"><span class="journey-number">03</span><span class="journey-name">Focus</span><span class="journey-note">Give one thing time.</span><span class="journey-arrow" aria-hidden="true">↘</span></a></li>
+          <li><a href="#review"><span class="journey-number">04</span><span class="journey-name">Review</span><span class="journey-note">Notice what happened.</span><span class="journey-arrow" aria-hidden="true">↘</span></a></li>
         </ol>
       </section>
 
-      <section class="surface-section" id="surfaces" aria-labelledby="surfaces-title">
+      <section class="surface-section" id="surfaces" data-walk="dawn" data-index="today" aria-labelledby="surfaces-title">
         <div class="section-heading section-pad section-heading-inline">
-          <div>
-            <p class="eyebrow">THE PAGES INSIDE</p>
-            <h2 id="surfaces-title">A little room for each part of the day.</h2>
-          </div>
-          <p>Real Daymark screens. Sample details are labeled so an example never looks like your own day.</p>
+          <div><h2 id="surfaces-title">A little room for each part of the day.</h2></div>
+          <p>Real Daymark screens. Sample details are labeled where they appear.</p>
         </div>
-
-        <article class="feature-row feature-row-first" id="today" aria-labelledby="today-title">
-          <div class="feature-copy">
-            <p class="eyebrow"><span class="feature-index">01</span> PLAN</p>
-            <h3 id="today-title">Start with today.</h3>
-            <p>
-              The next event comes first. Tasks, rituals, and the shape of the day sit close at hand, without
-              turning the page into a crowded dashboard.
-            </p>
-            <p class="feature-detail">Add a task or check in on a ritual from Today.</p>
+        <nav class="chapter-index" aria-label="Daymark pages">
+          <div class="page-nav-track" data-nav-track>
+            <a href="#today" data-index="today" aria-current="location">Today</a>
+            <a href="#rituals" data-index="rituals">Rituals</a>
+            <a href="#focus" data-index="focus">Focus</a>
+            <a href="#review" data-index="review">Review</a>
+            <a href="#shelf" data-index="shelf">Shelf</a>
+            <a href="#ask" data-index="ask">Ask</a>
+            <a href="#settings" data-index="settings">Settings</a>
+            <span class="nav-bead" aria-hidden="true"></span>
           </div>
-          <figure class="feature-visual">
-            <div class="device-frame">
-              <img
-                src="/assets/today.webp"
-                width="920"
-                height="2000"
-                loading="lazy"
-                alt="The Today page with a sample event card, quick task entry, and ritual check-ins."
-              />
+        </nav>
+      <div class="story-shell" id="tour">
+        <aside class="story-stage" aria-label="Daymark screen preview">
+          <figure class="stage-figure">
+            <div class="device-frame stage-device">
+              <div class="screen-window" data-stage>
+                {{PHONE_DECK}}
+              </div>
             </div>
-            <figcaption><span class="sample-tag">Sample day</span> Today on iPhone</figcaption>
+            <figcaption class="stage-caption" data-stage-caption aria-live="polite"></figcaption>
           </figure>
-        </article>
+          <div class="stage-foot" aria-hidden="true"><span>Daymark</span><span>iPhone</span></div>
+        </aside>
 
-        <article class="feature-row feature-row-reverse" id="rituals" aria-labelledby="rituals-title">
-          <div class="feature-copy">
-            <p class="eyebrow"><span class="feature-index">02</span> PRACTICE</p>
-            <h3 id="rituals-title">Keep a practice, without the scoreboard.</h3>
-            <p>
-              Set a daily, weekday, or weekly rhythm. The ledger shows your check-ins across the week; a missed
-              day is information, not a reason to start over.
-            </p>
-            <p class="feature-detail">Check in from Today or from the Rituals page.</p>
-          </div>
-          <figure class="feature-visual">
-            <div class="device-frame">
-              <img
-                src="/assets/rituals.webp"
-                width="920"
-                height="2000"
-                loading="lazy"
-                alt="Daymark Rituals page with four sample practices and the weekly check-in ledger."
-              />
-            </div>
-            <figcaption><span class="sample-tag">Sample week</span> Rituals and weekly ledger</figcaption>
-          </figure>
-        </article>
-
-        <article class="feature-row" id="focus" aria-labelledby="focus-title">
-          <div class="feature-copy">
-            <p class="eyebrow"><span class="feature-index">03</span> FOCUS</p>
-            <h3 id="focus-title">Give your attention a place to land.</h3>
-            <p>
-              Start a focus session, choose a length, or use the short and long rests. Your focus history keeps
-              today’s sessions and the last seven days together.
-            </p>
-            <p class="feature-detail">The running session stays in view as you move to another page.</p>
-          </div>
-          <figure class="feature-visual">
-            <div class="device-frame">
-              <img
-                src="/assets/focus.webp"
-                width="920"
-                height="2000"
-                loading="lazy"
-                alt="Daymark Focus page with a 25-minute focus dial, session controls, and focus history."
-              />
-            </div>
-            <figcaption><span class="sample-tag">Example content</span> Focus timer and history</figcaption>
-          </figure>
-        </article>
-
-        <article class="feature-row feature-row-reverse" id="review" aria-labelledby="review-title">
-          <div class="feature-copy">
-            <p class="eyebrow"><span class="feature-index">04</span> REVIEW</p>
-            <h3 id="review-title">Look back at what happened.</h3>
-            <p>
-              The weekly page gathers tasks, focus, and rituals you recorded. Prompts help you notice what
-              mattered, what got in the way, and one change to try next.
-            </p>
-            <p class="feature-detail">Review uses the daybook you made. It does not invent progress.</p>
-          </div>
-          <figure class="feature-visual">
-            <div class="device-frame">
-              <img
-                src="/assets/review.webp"
-                width="920"
-                height="2000"
-                loading="lazy"
-                alt="Daymark Review page labeled sample week, showing task, focus, and ritual totals."
-              />
-            </div>
-            <figcaption><span class="sample-tag">Sample week</span> A review built from example records</figcaption>
-          </figure>
-        </article>
-
-        <article class="feature-row" id="shelf" aria-labelledby="shelf-title">
-          <div class="feature-copy">
-            <p class="eyebrow"><span class="feature-index">05</span> SHELF</p>
-            <h3 id="shelf-title">Keep what you want to find again.</h3>
-            <p>
-              Save a note, link, or image to the Shelf. Share something in from another app, then come back to
-              it when the day has more room.
-            </p>
-            <p class="feature-detail">Search, filter, tag, and pin the things you keep.</p>
-          </div>
-          <figure class="feature-visual feature-visual-wide">
-            <div class="device-frame">
-              <img
-                src="/assets/shelf.webp"
-                width="920"
-                height="2000"
-                loading="lazy"
-                alt="Daymark Shelf with example notes and images, search, filters, and tags."
-              />
-            </div>
-            <figcaption><span class="sample-tag">Example entries</span> Notes, links, and images</figcaption>
-          </figure>
-        </article>
-
-        <article class="feature-row feature-row-reverse" id="ask" aria-labelledby="ask-title">
-          <div class="feature-copy">
-            <p class="eyebrow"><span class="feature-index">06</span> ASK DAYMARK</p>
-            <h3 id="ask-title">Ask about the day you actually have.</h3>
-            <p>
-              Ask Daymark can answer from a read-only view of your daybook and turn loose phrasing into a
-              typed, reviewable action. The optional Gemma model is a separate download you choose to
-              install; it runs on your device.
-            </p>
-            <p class="feature-detail">
-              The model is optional. Web search is a separate setting, off by default, and sends only your
-              question when you use it.
-            </p>
-          </div>
-          <figure class="feature-visual">
-            <div class="device-frame">
-              <img
-                src="/assets/ask-daymark.webp"
-                width="920"
-                height="1995"
-                loading="lazy"
-                alt="Ask Daymark answering a question from a sample daybook in Daybook mode with the optional Fast model selected."
-              />
-            </div>
-            <figcaption><span class="sample-tag">Example conversation</span> Answer grounded in a sample daybook</figcaption>
-          </figure>
-        </article>
+        <div class="story-flow">{{TOUR_SECTIONS}}</div>
+      </div>
       </section>
 
-      <section class="ipad-section section-pad" aria-labelledby="ipad-title">
+      <section class="ipad-section section-pad" id="ipad" data-walk="dusk" aria-labelledby="ipad-title">
         <div class="ipad-copy">
-          <p class="eyebrow">A WIDER PAGE</p>
           <h2 id="ipad-title">The daybook opens up on iPad.</h2>
-          <p>
-            Plan and Practice sit across an open spread, with the day’s events and tasks on the other page.
-            The same pages adapt to a regular iPhone layout.
-          </p>
+          <p>In landscape, Plan and Practice sit across an open spread. Choose a page below to see the real capture.</p>
         </div>
-        <figure class="ipad-figure">
-          <div class="ipad-frame">
-            <img
-              src="/assets/ipad-today.webp"
-              width="1600"
-              height="1200"
-              loading="lazy"
-              alt="Daymark on iPad in a two-page daybook layout, showing a labeled sample day, Plan, Practice, tasks, and weather."
-            />
-          </div>
-          <figcaption><span class="sample-tag">Sample day</span> Daymark on iPad</figcaption>
+        <div class="ipad-book" data-ipad-book>
+          <div class="ipad-tabs" data-ipad-tabs aria-label="iPad pages" hidden>{{IPAD_TABS}}</div>
+          <div class="ipad-panels">{{IPAD_PANELS}}</div>
+        </div>
+      </section>
+
+      <section class="daylight-section section-pad" id="daylight" data-walk="daylight" aria-labelledby="daylight-title">
+        <div class="daylight-copy">
+          <h2 id="daylight-title">The paper follows the day.</h2>
+          <p>Choose Daylight and the page moves with your weather city’s sunrise and sunset. Without a forecast it keeps a plain 6:30 to 6:30 day.</p>
+          <fieldset class="phase-picker">
+            <legend>Try a paper tone</legend>
+            {{PHASE_CONTROLS}}
+          </fieldset>
+        </div>
+        <figure class="daylight-figure">
+          <div class="daylight-screen">{{PHASE_FRAMES}}</div>
+          <figcaption data-phase-caption><span class="sample-tag">Product UI</span> Daylight · <span data-phase-name>Dawn</span>, recorded on iPhone</figcaption>
         </figure>
       </section>
 
-      <section class="trust-section section-pad" aria-labelledby="trust-title">
-        <div class="section-heading section-heading-inline">
-          <div>
-            <p class="eyebrow">A CLEAR EDGE</p>
-            <h2 id="trust-title">Private by default. Specific about the exceptions.</h2>
-          </div>
-          <p>Daymark has no account, analytics, cloud sync, or remote AI service.</p>
+      <section class="privacy-section section-pad" id="privacy" data-walk="nightfall" aria-labelledby="privacy-title">
+        <div class="privacy-copy">
+          <h2 id="privacy-title">Private by default. Clear about the exceptions.</h2>
+          <p>Daymark has no account, analytics, cloud sync, or remote AI service. A few optional connections belong to features you choose to use.</p>
         </div>
-        <div class="trust-grid">
-          <article>
-            <span class="trust-symbol" aria-hidden="true">01</span>
-            <h3>Your daybook stays on your device.</h3>
-            <p>Tasks, events, rituals, focus, reviews, and Shelf entries live in the app on your device.</p>
-          </article>
-          <article>
-            <span class="trust-symbol" aria-hidden="true">02</span>
-            <h3>Optional means you choose.</h3>
-            <p>Search is off by default. The on-device model downloads only when you request it.</p>
-          </article>
-          <article>
-            <span class="trust-symbol" aria-hidden="true">03</span>
-            <h3>System sync stays yours.</h3>
-            <p>Calendar and Reminders use the system accounts and lists you select; any account sync follows that provider’s settings.</p>
-          </article>
+        <div class="privacy-list">
+          <p><strong>Your daybook</strong><span>Stored in Daymark on this device.</span></p>
+          <p><strong>Web search</strong><span>Off by default. Only your question is sent when you search.</span></p>
+          <p><strong>Calendar and Reminders</strong><span>Uses the system accounts and lists you select.</span></p>
+          <p><strong>Weather and links</strong><span>Connect to providers only when those features are used.</span></p>
         </div>
-        <a class="text-link trust-link" href="/privacy/">Read the full privacy details <span aria-hidden="true">↗</span></a>
+        <a class="text-link privacy-link" href="/privacy/">See every network use and what export includes <span aria-hidden="true">↗</span></a>
       </section>
 
       <section class="closing-section" aria-labelledby="closing-title">
         <div class="closing-inner">
-          <p class="eyebrow eyebrow-light">DAYMARK FOR IPHONE AND IPAD</p>
           <h2 id="closing-title">A quieter way to keep your days.</h2>
           <p>Coming soon to the App Store.</p>
           <div class="closing-links">
@@ -338,16 +166,9 @@
 
     <footer class="site-footer">
       <div class="footer-inner">
-        <a class="brand brand-footer" href="/" aria-label="Daymark home">
-          <img src="/assets/daymark-mark.webp" width="32" height="32" alt="" />
-          <span>Daymark</span>
-        </a>
+        <a class="brand brand-footer" href="/" aria-label="Daymark home"><img src="/assets/daymark-mark.webp" width="32" height="32" alt="" /><span>Daymark</span></a>
         <p>A quiet daybook for the days that matter.</p>
-        <nav aria-label="Footer navigation">
-          <a href="/privacy/">Privacy</a>
-          <a href="/support/">Support</a>
-          <a href="#top">Back to top ↑</a>
-        </nav>
+        <nav aria-label="Footer navigation"><a href="/privacy/">Privacy</a><a href="/support/">Support</a><a href="#top">Back to top ↑</a></nav>
       </div>
     </footer>
   </body>

@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en" data-paper="day">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f1ecdf" />
+    <meta
+      name="description"
+      content="A clear account of what Daymark keeps on your device and what its optional connections send."
+    />
+    <title>Privacy — Daymark</title>
+    <link rel="icon" href="/assets/favicon.png" type="image/png" sizes="32x32" />
+    <link rel="stylesheet" href="/styles.css" />
+    <script defer src="/app.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="/" aria-label="Daymark home">
+          <img src="/assets/daymark-mark.webp" width="38" height="38" alt="" />
+          <span>Daymark</span>
+        </a>
+        <nav class="primary-nav" aria-label="Main navigation">
+          <a href="/#journey">The daybook</a>
+          <a href="/#surfaces">What it holds</a>
+          <a href="/privacy/" aria-current="page">Privacy</a>
+          <a href="/support/">Support</a>
+        </nav>
+        <button class="paper-toggle" type="button" data-paper-toggle hidden>Try night paper</button>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="reading-hero" aria-labelledby="page-title">
+        <div class="reading-hero-inner">
+          <p class="eyebrow">A CLEAR ACCOUNT</p>
+          <h1 id="page-title">Privacy, with the edges shown.</h1>
+          <p>
+            Daymark keeps your daybook on your device. It has no Daymark account, analytics, cloud sync, or
+            remote AI service. Some features you choose use other services; this page names them plainly.
+          </p>
+        </div>
+      </section>
+
+      <div class="reading-content">
+        <section aria-labelledby="stored-title">
+          <h2 id="stored-title">What stays in Daymark</h2>
+          <p>
+            Tasks, events you create, rituals and check-ins, focus sessions and timers, Shelf entries, and
+            weekly reviews are stored by the app on your iPhone or iPad. Ask Daymark reads a local view of
+            your daybook. The optional Gemma model runs on your device after download; its prompts stay there.
+          </p>
+          <p>
+            If you connect Apple Calendar or Reminders, Daymark reads only the calendars and lists you
+            select. Changes you make to imported items can be written back through Apple’s system services.
+            If a selected calendar or list belongs to an account that syncs, that sync follows the account
+            provider’s settings on your device.
+          </p>
+        </section>
+
+        <section aria-labelledby="network-title">
+          <h2 id="network-title">When Daymark uses the network</h2>
+          <p>These connections belong to specific features. They do not send your whole daybook.</p>
+
+          <h3>Weather and place search</h3>
+          <p>
+            Forecasts use Apple WeatherKit. Place search, and a fallback forecast when WeatherKit is
+            unavailable, use Open-Meteo. The place you search for and its coordinates are sent to those
+            services.
+          </p>
+
+          <h3>Link details on the Shelf</h3>
+          <p>
+            When you add a link, Daymark requests that page from its website to read the title and description.
+            The website receives that request like a normal visit.
+          </p>
+
+          <h3>Optional web search</h3>
+          <p>
+            Web search is off by default. If you turn it on and search in Open chat, only your question is sent
+            to DuckDuckGo. DuckDuckGo Instant Answer and Wikipedia can be used as fallbacks. Your daybook and
+            its history are not included in the search request.
+          </p>
+
+          <h3>Optional on-device model</h3>
+          <p>
+            The Gemma 4 model is downloaded only after you choose it. The download comes from Hugging Face;
+            after it is installed, the model runs locally. You can remove the downloaded model in Settings.
+          </p>
+        </section>
+
+        <section aria-labelledby="export-title">
+          <h2 id="export-title">What export and restore include</h2>
+          <div class="notice-panel">
+            <p>
+              A Daymark daybook export contains tasks, events, Shelf records, and sample-data metadata. It
+              does not include rituals or check-ins, focus history or timers, weekly reviews, assistant chat,
+              or the images saved on the Shelf. The daily on-device restore copies cover that same limited
+              file and keep up to seven copies. These tools are not a complete backup of every kind of
+              Daymark data.
+            </p>
+          </div>
+          <p>
+            Before moving to another device or relying on an export, check that it contains the records you
+            need. The app does not provide automatic cloud sync for its daybook.
+          </p>
+        </section>
+
+        <section aria-labelledby="website-title">
+          <h2 id="website-title">This website</h2>
+          <p>
+            This static site uses no cookies, analytics, or third-party assets. Its styles, scripts, icons, and
+            images are served from the site itself.
+          </p>
+        </section>
+
+        <a class="page-back" href="/">← Back to Daymark</a>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <a class="brand brand-footer" href="/" aria-label="Daymark home">
+          <img src="/assets/daymark-mark.webp" width="32" height="32" alt="" />
+          <span>Daymark</span>
+        </a>
+        <p>A quiet daybook for the days that matter.</p>
+        <nav aria-label="Footer navigation">
+          <a href="/privacy/" aria-current="page">Privacy</a>
+          <a href="/support/">Support</a>
+          <a href="/">Home</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>

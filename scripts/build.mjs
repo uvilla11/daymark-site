@@ -33,15 +33,16 @@ const ledgerRows = data.ledger.rows.map((row, rowIndex) => {
   return `<tr data-ledger-row="${rowIndex}"><th scope="row">${esc(row.name)}<span>${esc(row.cadence)}</span></th>${cells}<td class="ledger-kept"><output>${checked}</output><span> / ${row.target}</span></td></tr>`;
 }).join("\n");
 
-const chapters = data.chapters.map(chapter => `
+const chapters = data.chapters.map((chapter, chapterIndex) => `
   <section class="chapter" id="${esc(chapter.id)}" data-walk="${esc(chapter.tone)}" data-index="${esc(chapter.id)}" aria-labelledby="${esc(chapter.id)}-title">
     <header class="chapter-head">
+      <p class="chapter-kicker"><span>Chapter ${String(chapterIndex + 1).padStart(2, "0")}</span><span aria-hidden="true">—</span><span>${esc(chapter.nav)}</span></p>
       <h2 id="${esc(chapter.id)}-title">${esc(chapter.title)}</h2>
       <p>${esc(chapter.intro)}</p>
     </header>
     <ol class="steps" aria-label="${esc(chapter.nav)} screens">
       ${chapter.steps.map((step, index) => `
-      <li class="step" id="${esc(step.id)}" data-screen="${esc(step.id)}">
+      <li class="step" id="${esc(step.id === chapter.id ? `${step.id}-screen` : step.id)}" data-screen="${esc(step.id)}">
         <figure class="step-shot">
           <div class="device-frame inline-device"><img src="/assets/${esc(step.asset)}" width="920" height="2000" alt="${esc(step.alt)}" loading="lazy" /></div>
           <figcaption>${caption(step.label, step.caption)}</figcaption>

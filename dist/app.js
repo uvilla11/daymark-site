@@ -6,7 +6,7 @@ const storyMode = matchMedia("(min-width: 981px) and (min-height: 620px)");
 
 // The phone, index bead, and paper share one rAF queue. The same retargetable
 // closed-form spring used by the original tour keeps value and velocity joined.
-const SPRING = { flag: 0.24, trail: 0.4, deck: 0.6 };
+const SPRING = { flag: 0.22, trail: 0.36, deck: 0.48 };
 const stepResponse = (tau, response) => {
   if (tau <= 0) return 0;
   const w = (2 * Math.PI) / response;
@@ -46,18 +46,21 @@ const kick = animate => {
 // System paper is the default. The button is a temporary override; no browser
 // storage or cookie is needed for a presentation preference.
 const themeToggle = document.querySelector("[data-theme-toggle]");
+const DARK_PALETTE = new Set(["predawn", "nightfall", "night"]);
+let paletteOverride = null;
+const paletteIsDark = () => root.dataset.scheme === "dark" || DARK_PALETTE.has(root.dataset.tone);
 const updateThemeToggle = () => {
   if (!themeToggle) return;
   themeToggle.hidden = false;
-  const dark = root.dataset.scheme === "dark";
-  themeToggle.textContent = dark ? "Use light palette" : "Try night paper";
+  const dark = paletteIsDark();
+  themeToggle.textContent = dark ? "Use light paper" : "Try night paper";
   themeToggle.setAttribute("aria-pressed", String(dark));
 };
 if (themeToggle) {
   updateThemeToggle();
   themeToggle.addEventListener("click", () => {
-    root.dataset.scheme = root.dataset.scheme === "dark" ? "light" : "dark";
-    updateThemeToggle();
+    paletteOverride = paletteIsDark() ? "light" : "dark";
+    root.dataset.scheme = paletteOverride;
     applyCurrentTone();
   });
 }
@@ -67,12 +70,14 @@ const TONE_NAMES = {
 };
 const TONES = Object.keys(TONE_NAMES);
 const DARK_TONE = { predawn: "predawn", dawn: "predawn", parchment: "night", dusk: "nightfall", nightfall: "night", night: "night" };
+const LIGHT_TONE = { predawn: "dawn", nightfall: "dusk", night: "parchment" };
 const phaseInputs = $$('input[name="phase"]');
 const phaseNowLabels = $$('[data-phase-now]');
 const phaseName = document.querySelector("[data-phase-name]");
 const phaseFrames = $$('[data-phase-frame]');
 let phaseChosen = false;
 let chosenPhase = "dawn";
+let currentLogicalTone = root.dataset.tone || "dawn";
 const daylightTone = date => {
   const minute = date.getHours() * 60 + date.getMinutes() + date.getSeconds() / 60;
   const sunrise = 6.5 * 60;
@@ -87,26 +92,33 @@ const daylightTone = date => {
   return "nightfall";
 };
 const clockTone = () => daylightTone(new Date());
-const displayTone = tone => root.dataset.scheme === "dark" ? DARK_TONE[tone] || tone : tone;
+const displayTone = tone => paletteOverride === "dark" ? DARK_TONE[tone] || tone : paletteOverride === "light" ? LIGHT_TONE[tone] || tone : tone;
 const refreshPhase = tone => {
   phaseInputs.forEach(input => { input.checked = input.value === tone; });
-phaseNowLabels.forEach(label => label.hidden = label.closest(".phase-choice")?.querySelector('input[name="phase"]')?.value !== clockTone());
-  phaseFrames.forEach(frame => { frame.hidden = frame.dataset.phaseFrame !== tone; });
+  phaseNowLabels.forEach(label => { label.hidden = label.closest(".phase-choice")?.querySelector('input[name="phase"]')?.value !== clockTone(); });
   const frameShell = document.querySelector(".daylight-screen");
   frameShell?.setAttribute("data-ready", "true");
+  phaseFrames.forEach(frame => {
+    const selected = frame.dataset.phaseFrame === tone;
+    frame.hidden = false;
+    frame.classList.toggle("is-selected", selected);
+    frame.setAttribute("aria-hidden", String(!selected));
+    frame.inert = !selected;
+  });
   if (phaseName) phaseName.textContent = TONE_NAMES[tone] || TONE_NAMES.dawn;
 };
 
 const setTone = tone => {
   if (!tone || !TONES.includes(tone)) return;
+  currentLogicalTone = tone;
   const next = displayTone(tone);
   const previous = root.dataset.tone;
-  const darkTones = new Set(["predawn", "nightfall", "night"]);
-  if (previous && previous !== next && darkTones.has(previous) !== darkTones.has(next)) {
+  if (previous && DARK_PALETTE.has(previous) !== DARK_PALETTE.has(next)) {
     root.classList.add("tone-cut");
     requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove("tone-cut")));
   }
   root.dataset.tone = next;
+  updateThemeToggle();
   if (document.querySelector("#daylight")) refreshPhase(phaseChosen ? chosenPhase : (tone === "daylight" ? clockTone() : tone));
 };
 const walkTone = element => {
@@ -134,7 +146,7 @@ screens.forEach(el => {
     note: el.dataset.caption || el.dataset.screen,
   });
 });
-const near = (index, position) => (index >= windowAt - 1 && index <= windowAt + 3) || Math.abs(index - position) < 1;
+const near = (index, position) => index >= Math.floor(Math.min(position, windowAt)) - 1 && index <= Math.ceil(Math.max(position, windowAt)) + 1;
 const markNear = position => screens.forEach((element, index) => element.toggleAttribute("data-near", near(index, position)));
 const preload = index => {
   for (let i = Math.max(0, index - 1); i <= Math.min(pictures.length - 1, index + 3); i++) {
@@ -144,6 +156,20 @@ const preload = index => {
     image.decode?.().catch(() => {});
   }
 };
+// Once the critical hero has loaded, warm the tour images so jumping directly
+// between chapters never reveals an empty device while a lazy image downloads.
+if (screens.length) {
+  const warmDeck = () => screens.forEach(element => {
+    const image = element.querySelector("img");
+    if (!image) return;
+    image.loading = "eager";
+    image.decode?.().catch(() => {});
+  });
+  window.addEventListener("load", () => {
+    if ("requestIdleCallback" in window) requestIdleCallback(warmDeck, { timeout: 1200 });
+    else setTimeout(warmDeck, 250);
+  }, { once: true });
+}
 const renderDeck = t => {
   const position = deck.value(t);
   screens.forEach((element, index) => {
@@ -151,17 +177,16 @@ const renderDeck = t => {
     const relative = Math.max(-1, Math.min(1, index - position));
     const off = Math.abs(relative) >= 1;
     element.style.visibility = off ? "hidden" : "visible";
+    element.style.opacity = off ? "0" : String(Math.max(0, 1 - Math.abs(relative)).toFixed(3));
     if (off) return;
-    element.style.transform = `translate(0, ${(relative * 100).toFixed(3)}%)`;
-    const image = element.querySelector("img");
-    if (image) image.style.transform = `translate(0, ${(-relative * 91).toFixed(3)}%)`;
+    element.style.transform = `translate3d(0, ${(relative * 6).toFixed(3)}%, 0) scale(${(1 - Math.abs(relative) * .025).toFixed(4)})`;
   });
   return deck.moving(t);
 };
 const clearDeckStyles = () => screens.forEach(element => {
   element.style.removeProperty("visibility");
+  element.style.removeProperty("opacity");
   element.style.removeProperty("transform");
-  element.querySelector("img")?.style.removeProperty("transform");
 });
 const setScreen = (id, instant = false) => {
   const index = screenIds.indexOf(id);
@@ -181,9 +206,18 @@ const setScreen = (id, instant = false) => {
     clearDeckStyles();
     return;
   }
-  if (instant) deck.snap(index);
+  const distant = Math.abs(index - deck.value(now())) > 1.8;
+  if (instant || distant) deck.snap(index);
   else deck.set(index, SPRING.deck, now());
-  if (stage && root.dataset.storyMode === "desktop") kick(renderDeck);
+  if (stage && root.dataset.storyMode === "desktop") {
+    kick(renderDeck);
+    if (distant && !instant) {
+      stage.closest(".stage-device")?.animate([
+        { opacity: .68, transform: "translateY(8px) scale(.985)" },
+        { opacity: 1, transform: "translateY(0) scale(1)" },
+      ], { duration: 360, easing: "cubic-bezier(.2, .7, .2, 1)" });
+    }
+  }
 };
 
 const escapeHTML = value => String(value).replace(/[&<>"']/g, character => ({
@@ -251,9 +285,17 @@ let walkBands = [];
 const closestBand = (bands, y) => {
   let best;
   let distance = Infinity;
+  let span = Infinity;
   for (const item of bands) {
     const d = y < item.top ? item.top - y : y > item.bottom ? y - item.bottom : 0;
-    if (d < distance) { best = item; distance = d; }
+    const itemSpan = item.bottom - item.top;
+    // A chapter sits inside the larger surface section. Prefer the narrower
+    // matching region, or its parent would win every scroll update.
+    if (d < distance || (d === distance && itemSpan < span)) {
+      best = item;
+      distance = d;
+      span = itemSpan;
+    }
   }
   return best?.el;
 };
@@ -388,12 +430,18 @@ const tabLists = $$('[data-ipad-tabs]');
 for (const list of tabLists) {
   const tabs = $$('[role="tab"]', list);
   const panels = tabs.map(tab => document.getElementById(tab.getAttribute("aria-controls")));
+  list.closest("[data-ipad-book]")?.classList.add("is-enhanced");
   const selectTab = (tab, focus = false) => {
     tabs.forEach((item, index) => {
       const selected = item === tab;
       item.setAttribute("aria-selected", String(selected));
       item.tabIndex = selected ? 0 : -1;
-      if (panels[index]) panels[index].hidden = !selected;
+      if (panels[index]) {
+        panels[index].hidden = false;
+        panels[index].classList.toggle("is-selected", selected);
+        panels[index].setAttribute("aria-hidden", String(!selected));
+        panels[index].inert = !selected;
+      }
     });
     if (focus) tab.focus();
   };
@@ -487,7 +535,7 @@ if (motionOK.matches && "IntersectionObserver" in window) {
     }
     observer.unobserve(element);
   }), { rootMargin: "0px 0px -12% 0px" });
-  $$(".step-shot, .ipad-figure, .daylight-figure").forEach(element => observer.observe(element));
+  $$(".step-shot, .ipad-figure, .daylight-figure, .chapter-head, .section-heading, .ipad-copy, .daylight-copy, .privacy-copy").forEach(element => observer.observe(element));
 }
 
 const stopMotion = () => {
@@ -511,7 +559,7 @@ motionOK.addEventListener("change", () => {
 storyMode.addEventListener("change", applyMode);
 window.addEventListener("resize", measure, { passive: true });
 function applyCurrentTone() {
-  const tone = walkElement ? walkTone(walkElement) : root.dataset.tone || "dawn";
+  const tone = walkElement ? walkTone(walkElement) : currentLogicalTone;
   setTone(tone);
 }
 

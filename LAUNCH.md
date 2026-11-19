@@ -4,7 +4,7 @@ Everything here must be done before the site is announced or linked from the App
 
 ## ⚠️ Screenshots are out of date
 
-**Status: on hold until the app’s UI polish and refinement are complete.**
+**Status: in progress on branch `screenshots-refresh`; see [SCREENSHOTS.md](SCREENSHOTS.md).**
 
 The tour uses captures from October 19, 2026. The app has changed since then and more UI work is
 planned, so **recapture every screenshot once the UI settles, and before launch**. Today alone has a new

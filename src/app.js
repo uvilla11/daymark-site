@@ -3,21 +3,6 @@ const $$ = (selector, scope = document) => Array.from(scope.querySelectorAll(sel
 const now = () => performance.now() / 1000;
 const motionOK = matchMedia("(prefers-reduced-motion: no-preference)");
 const storyMode = matchMedia("(min-width: 981px) and (min-height: 620px)");
-const hero = document.querySelector(".hero");
-const heroDepthProps = ["--hero-atmosphere-y", "--hero-back-y", "--hero-middle-y", "--hero-product-y", "--hero-product-scale", "--hero-side-y"];
-const resetHeroDepth = () => heroDepthProps.forEach(property => hero?.style.removeProperty(property));
-const renderHeroDepth = viewport => {
-  if (!hero || !motionOK.matches) return;
-  const distance = Math.max(1, Math.min(hero.offsetHeight * .72, viewport * .76));
-  const progress = Math.min(1, Math.max(0, -hero.getBoundingClientRect().top / distance));
-  const scale = innerWidth < 600 ? .55 : innerWidth < 981 ? .75 : 1;
-  hero.style.setProperty("--hero-atmosphere-y", `${(-10 * progress * scale).toFixed(2)}px`);
-  hero.style.setProperty("--hero-back-y", `${(-26 * progress * scale).toFixed(2)}px`);
-  hero.style.setProperty("--hero-middle-y", `${(-12 * progress * scale).toFixed(2)}px`);
-  hero.style.setProperty("--hero-product-y", `${(12 * progress * scale).toFixed(2)}px`);
-  hero.style.setProperty("--hero-product-scale", (1 - .025 * progress * scale).toFixed(4));
-  hero.style.setProperty("--hero-side-y", `${(23 * progress * scale).toFixed(2)}px`);
-};
 
 // The phone, index bead, and paper share one rAF queue. The same retargetable
 // closed-form spring used by the original tour keeps value and velocity joined.
@@ -58,16 +43,19 @@ const kick = animate => {
   if (!ticking) { ticking = true; frameId = requestAnimationFrame(frame); }
 };
 
-// System paper is the default. The button is a temporary override; no browser
-// storage or cookie is needed for a presentation preference.
+// The system appearance picks light or night paper. The button is the only
+// other way to change it, and the choice is remembered. Scrolling never flips
+// the page between light and dark: section tones stay on the chosen side.
 const themeToggle = document.querySelector("[data-theme-toggle]");
 const DARK_PALETTE = new Set(["predawn", "nightfall", "night"]);
+const systemDark = matchMedia("(prefers-color-scheme: dark)");
 let paletteOverride = null;
 try {
-  const savedPaper = sessionStorage.getItem("daymark-paper");
+  const savedPaper = localStorage.getItem("daymark-paper");
   if (savedPaper === "light" || savedPaper === "dark") paletteOverride = savedPaper;
 } catch { /* A storage restriction should not disable the theme control. */ }
-const paletteIsDark = () => root.dataset.scheme === "dark" || DARK_PALETTE.has(root.dataset.tone);
+const scheme = () => paletteOverride || (systemDark.matches ? "dark" : "light");
+const paletteIsDark = () => scheme() === "dark";
 const updateThemeToggle = () => {
   if (!themeToggle) return;
   themeToggle.hidden = false;
@@ -79,11 +67,16 @@ if (themeToggle) {
   updateThemeToggle();
   themeToggle.addEventListener("click", () => {
     paletteOverride = paletteIsDark() ? "light" : "dark";
-    try { sessionStorage.setItem("daymark-paper", paletteOverride); } catch { /* Keep this page working. */ }
+    try { localStorage.setItem("daymark-paper", paletteOverride); } catch { /* Keep this page working. */ }
     root.dataset.scheme = paletteOverride;
     applyCurrentTone();
   });
 }
+systemDark.addEventListener("change", () => {
+  if (paletteOverride) return;
+  root.dataset.scheme = scheme();
+  applyCurrentTone();
+});
 
 const TONE_NAMES = {
   predawn: "Predawn", dawn: "Dawn", parchment: "Parchment", dusk: "Dusk", nightfall: "Nightfall", night: "Night",
@@ -111,7 +104,7 @@ const daylightTone = date => {
   return "nightfall";
 };
 const clockTone = () => daylightTone(new Date());
-const displayTone = tone => paletteOverride === "dark" ? DARK_TONE[tone] || tone : paletteOverride === "light" ? LIGHT_TONE[tone] || tone : tone;
+const displayTone = tone => paletteIsDark() ? DARK_TONE[tone] || tone : LIGHT_TONE[tone] || tone;
 const refreshPhase = tone => {
   phaseInputs.forEach(input => { input.checked = input.value === tone; });
   const frameShell = document.querySelector(".daylight-screen");
@@ -205,9 +198,22 @@ const clearDeckStyles = () => screens.forEach(element => {
   element.style.removeProperty("opacity");
   element.style.removeProperty("transform");
 });
+let decoding = null;
 const setScreen = (id, instant = false) => {
   const index = screenIds.indexOf(id);
   if (index < 0) return;
+  // Keep the current screen until the next one has decoded, so a fast scroll
+  // or a chapter jump never shows an empty device.
+  const image = screens[index].querySelector("img");
+  if (image && !image.complete) {
+    if (decoding === id) return;
+    decoding = id;
+    image.loading = "eager";
+    const finish = () => { if (decoding === id) { decoding = null; setScreen(id, instant); } };
+    (image.decode ? image.decode() : Promise.reject()).then(finish, () => image.addEventListener("load", finish, { once: true }));
+    return;
+  }
+  decoding = null;
   windowAt = index;
   screenId = id;
   markNear(motionOK.matches ? deck.value(now()) : index);
@@ -294,37 +300,19 @@ const activateLink = (id, instant = false) => {
 
 const storyStops = $$('.story-flow [data-screen]');
 const storyCards = storyStops.map(stop => stop.querySelector('.step-copy')).filter(Boolean);
-const chapterHeads = $$('.story-flow .chapter-head');
-const clearCardMotion = () => storyCards.forEach(card => {
-  card.style.removeProperty('--card-opacity');
-});
-// Each card leaves before any of its readable text is covered by the sticky
-// chapter heading. Drive opacity from the leading edge, not the trailing edge:
-// a trailing-edge fade exposes clipped, mid-sentence fragments on reverse scroll.
+// The active screen is the card nearest the reading line below the pinned index.
 const paintCards = viewport => {
   if (root.dataset.storyMode !== 'desktop') return null;
-  const exitStart = 12;
-  const exitEnd = -52;
-  const enterDistance = 110;
-  const ease = value => value * value * (3 - 2 * value);
   let visibleScreen = null;
   let nearestDistance = Infinity;
   let largestExposure = 0;
+  const headerEdge = Math.max(0, navScroll?.getBoundingClientRect().bottom ?? 0);
   storyCards.forEach(card => {
     const rect = card.getBoundingClientRect();
-    const header = card.closest('.chapter')?.querySelector('.chapter-head');
-    const headerEdge = header?.getBoundingClientRect().bottom ?? 0;
-    const leadingClearance = rect.top - headerEdge;
-    const exitOpacity = Math.max(0, Math.min(1, (leadingClearance - exitEnd) / (exitStart - exitEnd)));
-    const enterOpacity = Math.max(0, Math.min(1, (viewport - rect.top) / enterDistance));
-    const opacity = Math.min(ease(exitOpacity), ease(enterOpacity));
-    if (root.dataset.cardMotion === 'on') {
-      card.style.setProperty('--card-opacity', opacity.toFixed(3));
-    }
     const exposedTop = Math.max(rect.top, headerEdge, 0);
     const exposedBottom = Math.min(rect.bottom, viewport);
     const exposedHeight = Math.max(0, exposedBottom - exposedTop);
-    if (!exposedHeight || opacity < .08) return;
+    if (!exposedHeight) return;
     const availableTop = Math.max(0, Math.min(headerEdge, viewport));
     const readingLine = availableTop + (viewport - availableTop) * .32;
     const distance = readingLine < exposedTop ? exposedTop - readingLine : readingLine > exposedBottom ? readingLine - exposedBottom : 0;
@@ -335,16 +323,6 @@ const paintCards = viewport => {
     }
   });
   return visibleScreen;
-};
-// As one sticky chapter makes way for the next, dissolve its heading before
-// the exiting text can peek above the index. This follows the actual sticky
-// position, so direct chapter jumps and reverse scrolls behave the same way.
-const paintHeadings = () => {
-  if (root.dataset.storyMode !== 'desktop') return;
-  chapterHeads.forEach(head => {
-    const opacity = Math.max(0, Math.min(1, (head.getBoundingClientRect().top - 70) / 80));
-    head.style.setProperty('--heading-opacity', opacity.toFixed(3));
-  });
 };
 const walkers = $$('main [data-walk]');
 const toBand = element => {
@@ -388,12 +366,9 @@ const indexForTarget = target => {
 const update = () => {
   queued = false;
   const viewport = innerHeight;
-  renderHeroDepth(viewport);
   const exposedScreen = paintCards(viewport);
-  paintHeadings();
   const total = root.scrollHeight - viewport;
   const progress = total > 0 ? Math.min(1, Math.max(0, scrollY / total)) : 0;
-  document.querySelector("[data-progress]")?.style.setProperty("transform", `scaleX(${progress.toFixed(4)})`);
   const y = progress >= .998 ? root.scrollHeight : scrollY + viewport * .5;
   const activeWalk = closestBand(walkBands, y);
   if (activeWalk && !pendingTarget) {
@@ -474,11 +449,6 @@ for (const type of ["wheel", "touchstart", "keydown"]) {
 // Responsive mode changes retain content in flow on compact/tall-narrow views.
 const applyMode = () => {
   root.dataset.storyMode = storyMode.matches ? "desktop" : "inline";
-  root.dataset.cardMotion = storyMode.matches && motionOK.matches ? "on" : "off";
-  root.dataset.heroMotion = motionOK.matches ? "on" : "off";
-  if (!motionOK.matches) resetHeroDepth();
-  if (root.dataset.cardMotion === "off") clearCardMotion();
-  if (!storyMode.matches) chapterHeads.forEach(head => head.style.removeProperty('--heading-opacity'));
   $$(".steps").forEach(strip => {
     if (storyMode.matches || strip.children.length < 2) strip.removeAttribute("tabindex");
     else strip.tabIndex = 0;
@@ -695,40 +665,16 @@ for (const table of $$(".ledger table")) {
   });
 }
 
-// One-time image reveals only on compact strips, and only as they enter view.
-if (motionOK.matches && "IntersectionObserver" in window) {
-  const observer = new IntersectionObserver(entries => entries.forEach(entry => {
-    if (!entry.isIntersecting) return;
-    const element = entry.target;
-    const rect = entry.boundingClientRect;
-    if (rect.top > 0 && rect.top < innerHeight) {
-      element.animate([
-        { opacity: 0, transform: "translateY(9px)" },
-        { opacity: 1, transform: "translateY(0)" },
-      ], { duration: 340, easing: "cubic-bezier(.16, 1, .3, 1)" });
-    }
-    observer.unobserve(element);
-  }), { rootMargin: "0px 0px -12% 0px" });
-  $$(".step-shot, .ipad-figure, .daylight-figure, .chapter-head, .section-heading, .ipad-copy, .daylight-copy, .privacy-copy").forEach(element => observer.observe(element));
-}
-
 const stopMotion = () => {
   cancelAnimationFrame(frameId);
   animators.clear();
   ticking = false;
-  root.dataset.heroMotion = "off";
-  resetHeroDepth();
   deck.snap(deck.target());
   beadLeading.snap(beadLeading.target());
   beadTrailing.snap(beadTrailing.target());
   renderBead(now());
   clearDeckStyles();
-  clearCardMotion();
-  root.dataset.cardMotion = 'off';
   setScreen(screenId, true);
-  document.querySelectorAll(".step-shot, .ipad-figure, .daylight-figure").forEach(element => {
-    element.getAnimations?.().forEach(animation => animation.cancel());
-  });
 };
 motionOK.addEventListener("change", () => {
   if (!motionOK.matches) stopMotion();

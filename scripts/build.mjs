@@ -69,19 +69,15 @@ const chapters = data.chapters.map((chapter, chapterIndex) => `
     <ol class="steps" id="${esc(chapter.id)}-screens"${chapter.steps.length > 1 ? ' tabindex="0"' : ""} aria-label="${esc(chapter.nav)} screens">
       ${chapter.steps.map((step, index) => `
       <li class="step" id="${esc(step.id === chapter.id ? `${step.id}-screen` : step.id)}" data-screen="${esc(step.id)}">
-        <figure class="step-shot">
+        <div class="step-shot">
           <div class="device-frame inline-device"><img src="/assets/${esc(step.asset)}"${srcsetFor(step.asset)} width="920" height="2000" alt="${esc(step.alt)}" loading="lazy" /></div>
-          <figcaption>${caption(step.caption)}</figcaption>
-        </figure>
+        </div>
         <div class="step-copy">
-          ${chapter.steps.length > 1 ? `<p class="step-sequence" aria-label="Screen ${index + 1} of ${chapter.steps.length}">${index + 1} <span aria-hidden="true">/</span> ${chapter.steps.length}</p>` : ""}
           <h3>${esc(step.title)}</h3>
           <p class="step-summary">${esc(step.body)}</p>
-          ${step.detail ? `<p class="step-detail">${esc(step.detail)}</p>` : ""}
         </div>
       </li>`).join("\n")}
     </ol>
-    ${chapter.steps.length > 1 ? `<p class="strip-hint">Swipe to explore. Each card is numbered.</p>` : ""}
     ${chapter.id === "rituals" ? `
     <figure class="ledger" aria-labelledby="ledger-title">
       <figcaption id="ledger-title"><strong>Try the week ledger.</strong> Select a day to check in, and select it again to clear it.</figcaption>

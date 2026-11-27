@@ -95,3 +95,20 @@ test("with Reduce Motion, nothing animates on scroll", async ({ page }) => {
     .filter(a => a.playState === "running" && Number(a.effect?.getTiming().duration) > 1).length);
   expect(running).toBe(0);
 });
+
+test("paper follows the system and never flips while scrolling", async ({ page }) => {
+  await page.emulateMedia({ colorScheme: "dark" });
+  await page.goto("/");
+  await expect(page.locator("html")).toHaveAttribute("data-scheme", "dark");
+  await page.emulateMedia({ colorScheme: "light" });
+  await page.goto("/");
+  const toggle = page.locator("[data-theme-toggle]");
+  const label = await toggle.textContent();
+  await walk(page);
+  await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight));
+  await page.waitForTimeout(300);
+  await expect(page.locator("html")).toHaveAttribute("data-scheme", "light");
+  await expect(toggle).toHaveText(label);
+  const dark = await page.evaluate(() => getComputedStyle(document.documentElement).colorScheme);
+  expect(dark).toBe("light");
+});

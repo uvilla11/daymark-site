@@ -75,9 +75,9 @@ if [[ $KIND == phone ]]; then
   shot notifications        $S notifications
   shot calendar             $S calendar
   shot data                 $S data
-  # Daylight paper tones (site name: app appearance).
-  for n m in predawn predawn dawn dawn parchment light dusk dusk nightfall nightfall night dark; do
-    shot $n -DaymarkAppearance $m
+  # Each tone with the greeting it gets at that hour (site name, app appearance, hour).
+  for n m h in predawn predawn 5 dawn dawn 7 parchment light 13 dusk dusk 18 nightfall nightfall 20 night dark 23; do
+    shot $n -DaymarkAppearance $m -DaymarkHour $h
   done
 else
   DENSITY=${DENSITY:-2}

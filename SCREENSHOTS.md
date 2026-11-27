@@ -85,13 +85,17 @@ rebuilds, PRs #1–#8). Supersedes the "Screenshots are out of date" hold in [LA
 
 ## Status
 
-- **Ask, done 2026-11-26** on the iPhone 15 Pro Max with Gemma 4 Fast (Drive
-  `Website/2026-11-26-ask-device/`), by `DaymarkUITests/WebsiteAskCaptureUITests` with the phone's data
-  backed up, swapped and restored (verified byte-identical). `gemma-task` is the typed-command path
-  ("remember to …"), not the model: Fast did not add a task from looser phrasing. Its site copy must not
-  credit Gemma.
-- **Site "Sample day" tags removed** (tour-data `label`, the caption tag, its CSS and JS).
-- **Phone, Daylight and iPad sets:** trial-checked; final run in the morning.
+**Done 2026-11-27.**
+
+- Simulator set (iPhone 18 Pro, iPad Pro 13-inch) captured at 10:00 from one build of Daymark `2eb67af`:
+  Drive `Website/2026-11-27-recapture/` with `build.txt` (sha256 650df01d…). Each Daylight tone is
+  captured at its own hour so the greeting matches the paper.
+- Ask on the iPhone 15 Pro Max with Gemma 4 Fast: Drive `Website/2026-11-26-ask-device/`, by
+  `DaymarkUITests/WebsiteAskCaptureUITests` with the phone's data backed up, swapped and restored
+  (verified byte-identical). `gemma-task` is the typed-command path, and its copy says so.
+- Imported with `scripts/import-captures.mjs`; `og.png` regenerated from the new hero capture.
+- The tour was then cut from 24 stops to 14 (review finding #1, branch `site-review-fixes`); the cut
+  captures stay in Drive.
 
 ## Capture script
 

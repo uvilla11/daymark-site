@@ -78,7 +78,7 @@ test("every page has sharing and search tags", async ({ page }) => {
 test("iPad tabs work from the keyboard", async ({ page }) => {
   await page.goto("/");
   const tabs = page.getByRole("tablist", { name: "iPad pages" }).getByRole("tab");
-  await expect(tabs).toHaveCount(4);
+  await expect(tabs).toHaveCount(5);
   await tabs.first().focus();
   await page.keyboard.press("ArrowRight");
   await expect(tabs.nth(1)).toHaveAttribute("aria-selected", "true");

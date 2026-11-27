@@ -33,9 +33,9 @@ for (const asset of new Set([data.hero, ...data.chapters.flatMap(chapter => chap
 const srcsetFor = asset => phoneSrcset[asset] || "";
 
 
-const caption = (label, note) => `<span class="sample-tag">${esc(label)}</span> ${esc(note)}`;
+const caption = note => esc(note);
 const phoneScreen = (screen, eager = false) => `
-  <div class="deck-screen${screen.id === data.hero.id ? " is-active" : ""}" data-screen="${esc(screen.id)}" data-label="${esc(screen.label)}" data-caption="${esc(screen.caption)}" data-state="${screen.id === data.hero.id ? "active" : "after"}">
+  <div class="deck-screen${screen.id === data.hero.id ? " is-active" : ""}" data-screen="${esc(screen.id)}" data-caption="${esc(screen.caption)}" data-state="${screen.id === data.hero.id ? "active" : "after"}">
     <img src="/assets/${esc(screen.asset)}"${srcsetFor(screen.asset)} width="920" height="2000" alt="${esc(screen.alt)}" ${eager ? 'fetchpriority="high"' : 'loading="lazy"'} />
   </div>`;
 
@@ -71,7 +71,7 @@ const chapters = data.chapters.map((chapter, chapterIndex) => `
       <li class="step" id="${esc(step.id === chapter.id ? `${step.id}-screen` : step.id)}" data-screen="${esc(step.id)}">
         <figure class="step-shot">
           <div class="device-frame inline-device"><img src="/assets/${esc(step.asset)}"${srcsetFor(step.asset)} width="920" height="2000" alt="${esc(step.alt)}" loading="lazy" /></div>
-          <figcaption>${caption(step.label, step.caption)}</figcaption>
+          <figcaption>${caption(step.caption)}</figcaption>
         </figure>
         <div class="step-copy">
           ${chapter.steps.length > 1 ? `<p class="step-sequence" aria-label="Screen ${index + 1} of ${chapter.steps.length}">${index + 1} <span aria-hidden="true">/</span> ${chapter.steps.length}</p>` : ""}
@@ -100,7 +100,7 @@ const ipadPanels = data.ipad.map(panel => `
   <section class="ipad-panel" id="ipad-panel-${esc(panel.id)}" role="tabpanel" aria-labelledby="ipad-tab-${esc(panel.id)}">
     <figure class="ipad-figure">
       <div class="ipad-frame"><img src="/assets/${esc(panel.asset)}" width="1600" height="1200" alt="${esc(panel.alt)}" loading="lazy" /></div>
-      <figcaption>${caption(panel.label, panel.caption)}</figcaption>
+      <figcaption>${caption(panel.caption)}</figcaption>
     </figure>
   </section>`).join("\n");
 

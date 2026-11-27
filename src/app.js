@@ -160,7 +160,6 @@ screens.forEach(el => {
   const image = el.querySelector("img");
   screenInfo.set(el.dataset.screen, {
     alt: image?.alt || "",
-    label: el.dataset.label || "Product UI",
     note: el.dataset.caption || el.dataset.screen,
   });
 });
@@ -217,7 +216,7 @@ const setScreen = (id, instant = false) => {
     element.dataset.state = i < index ? "before" : i > index ? "after" : "active";
   });
   const info = screenInfo.get(id);
-  if (captions && info) captions.innerHTML = `<span class="sample-tag">${escapeHTML(info.label)}</span> ${escapeHTML(info.note)}`;
+  if (captions && info) captions.textContent = info.note;
   if (!motionOK.matches) {
     animators.delete(renderDeck);
     deck.snap(index);
@@ -237,10 +236,6 @@ const setScreen = (id, instant = false) => {
     }
   }
 };
-
-const escapeHTML = value => String(value).replace(/[&<>"']/g, character => ({
-  "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;",
-})[character]);
 
 // Active page bead: the leading edge advances on the short spring and the
 // trailing edge catches up on the longer one. The top line mirrors reading.

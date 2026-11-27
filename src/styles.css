@@ -274,7 +274,6 @@ html.js-ready[data-story-mode="desktop"] .story-stage { display: flex; }
 .deck-screen img { width: 100%; height: 100%; object-fit: cover; }
 html.js-ready[data-story-mode="desktop"] .deck-screen:not([data-state="active"]):not([data-near]) { display: none; }
 .stage-caption { min-height: 28px; margin-top: 14px; color: var(--muted); text-align: center; font-size: 12px; }
-.stage-caption .sample-tag { color: var(--ember); font-weight: 600; }
 
 .hero {
   position: relative;
@@ -389,7 +388,6 @@ html.js-ready[data-story-mode="desktop"] .deck-screen:not([data-state="active"])
 .hero-figure { width: 100%; animation: hero-enter 900ms var(--ease-out) both; }
 .device-frame-hero { border-color: #595b51; box-shadow: 0 35px 90px rgb(0 0 0 / .42), 0 0 0 1px rgb(255 255 255 / .05); }
 .hero-figure figcaption { margin-top: 15px; color: #d0c7ba; text-align: center; font-size: 12px; }
-.hero-figure .sample-tag { color: #edb597; }
 .hero-paper--side {
   z-index: 1;
   right: 2%;
@@ -481,7 +479,6 @@ html[data-hero-motion="on"] .hero-product-plane { will-change: transform; }
   letter-spacing: .025em;
   line-height: 1.45;
 }
-.sample-tag { margin-right: 5px; color: var(--ember); font-size: 12px; font-weight: 600; letter-spacing: 0; }
 .step-copy {
   width: 100%;
   max-width: 590px;

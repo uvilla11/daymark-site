@@ -83,6 +83,16 @@ rebuilds, PRs #1–#8). Supersedes the "Screenshots are out of date" hold in [LA
    Max with the model (step 4). `ask-brief` is the simulator's typed "Brief me" command, which needs no
    model.
 
+## Status
+
+- **Ask, done 2026-11-26** on the iPhone 15 Pro Max with Gemma 4 Fast (Drive
+  `Website/2026-11-26-ask-device/`), by `DaymarkUITests/WebsiteAskCaptureUITests` with the phone's data
+  backed up, swapped and restored (verified byte-identical). `gemma-task` is the typed-command path
+  ("remember to …"), not the model: Fast did not add a task from looser phrasing. Its site copy must not
+  credit Gemma.
+- **Site "Sample day" tags removed** (tour-data `label`, the caption tag, its CSS and JS).
+- **Phone, Daylight and iPad sets:** trial-checked; final run in the morning.
+
 ## Capture script
 
 `scripts/capture.sh` takes every simulator shot (phone set, Daylight set, iPad set) with agent-device

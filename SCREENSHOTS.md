@@ -1,15 +1,16 @@
 # Screenshot refresh plan
 
 Branch `screenshots-refresh`. Replaces every capture on the site with new simulator captures of the
-current app (Daymark `main` at `a8612d9`, after the Today, Rituals, Focus, Review and Shelf rebuilds,
-PRs #1–#5). Supersedes the "Screenshots are out of date" hold in [LAUNCH.md](LAUNCH.md).
+current app (Daymark `main` at `2eb67af`, after the Today, Rituals, Focus, Review, Shelf and Ask
+rebuilds, PRs #1–#8). Supersedes the "Screenshots are out of date" hold in [LAUNCH.md](LAUNCH.md).
 
 ## Rules
 
 - **Real captures only.** Every image is the app running on a simulator (or, for Ask, the device; see
   step 4). No mock-ups or edits beyond scaling.
-- **Sample content is labeled.** Captures use the in-app sample day (`-DaymarkSampleData`). Each entry
-  in `src/tour-data.json` keeps its `label` ("Sample day" or "Sample week").
+- **Looks like a real person's day.** The data is the app's built-in sample day, seeded on the capture
+  day and then kept as ordinary data (its `isSample` flags turned off), so no "Sample day" banner or
+  "Start fresh" link shows. The content is unchanged; only the flag is.
 - **Raw captures go to Drive, not git.** Full-resolution PNGs go to
   `Daymark UI review screenshots/Website/2026-11-19-recapture/` (see the Daymark repo's `AGENTS.md`).
   This repo takes only the scaled WebP files the site serves.
@@ -74,14 +75,24 @@ PRs #1–#5). Supersedes the "Screenshots are out of date" hold in [LAUNCH.md](L
 11. **Ship.** PR from this branch to `main`. Merging deploys to GitHub Pages; check the live site
     matches the merge commit.
 
-## Decisions before capturing
+## Decisions (settled 2026-11-26)
 
-1. **iPad coverage.** The iPad section shows Today, Rituals, Focus and Review. Recommended: add Shelf,
-   which now has a two-page spread. The section's tabs take a fifth entry.
-2. **New Today steps.** Recommended: add "Choose what Today shows" (the Today layout setting) and
-   "Event details" (the rebuilt sheet). That makes Today eight steps; alternatively swap out `month`.
-3. **Ask on device.** Recommended: recapture on the iPhone as in step 4. The alternative is keeping
-   the October Ask captures if the assistant's screens have not changed, which mixes old and new UI.
+1. **iPad adds Shelf** (`ipad-shelf`, the two-page spread). The section's tabs take a fifth entry.
+2. **Today adds two steps**: `today-layout` (Settings → Today layout) and `today-event` (Event details).
+3. **Ask on device**: `gemma-task`, `gemma-grounded` and `open-chat` are recaptured on the iPhone 15 Pro
+   Max with the model (step 4). `ask-brief` is the simulator's typed "Brief me" command, which needs no
+   model.
+
+## Capture script
+
+`scripts/capture.sh` takes every simulator shot (phone set, Daylight set, iPad set) with agent-device
+from T3's `device_open`. It seeds the data, turns off the sample flags, restores that copy before each
+shot, pins the status bar to 9:41, and refuses to mix builds in one folder (`build.txt`).
+
+Run the phone and iPad sets in the morning, around 10:00. The timeline and greeting are pinned to
+10:20, but the brief, event details, the weather card and countdown times follow the real clock, so
+an evening run shows night weather and tomorrow's event. The trial run on 2026-11-26 (evening) checked
+framing only.
 
 ## Done when
 

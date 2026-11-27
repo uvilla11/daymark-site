@@ -1,0 +1,26 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "src/index.html"
+        ],
+        "createdAt": "2026-11-27T06:11:51.238Z",
+        "reason": "agent: full-bleed bands (.surface-section, .closing-section) whose content is inset 40px by width var(--page); static scan can't see it; verified in 1440/390 screenshots"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "src/index.html"
+        ],
+        "createdAt": "2026-11-27T06:11:51.262Z",
+        "reason": "agent: Daymark's paper palette (app Dawn tone #f6e9e1); all 12 site reviews named it a keeper"
+      }
+    ]
+  }
+}

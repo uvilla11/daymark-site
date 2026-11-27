@@ -12,10 +12,11 @@
     <link rel="icon" href="/assets/favicon.png" type="image/png" sizes="32x32" />
     <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" sizes="180x180" />
     <script>
-      try {
-        const choice = sessionStorage.getItem("daymark-paper");
-        if (choice === "dark" || choice === "light") document.documentElement.dataset.scheme = choice;
-      } catch { /* The page works without storage. */ }
+      (() => {
+        let choice = null;
+        try { choice = localStorage.getItem("daymark-paper"); } catch { /* The page works without storage. */ }
+        document.documentElement.dataset.scheme = choice === "dark" || choice === "light" ? choice : matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      })();
     </script>
     <link rel="stylesheet" href="/styles.css" />
     <script defer src="/app.js"></script>
@@ -29,8 +30,7 @@
           <span>Daymark</span>
         </a>
         <nav class="primary-nav" aria-label="Main navigation">
-          <a href="/#journey">The daybook</a>
-          <a href="/#surfaces">What it holds</a>
+          <a href="/#surfaces">Tour</a>
           <a href="/privacy/" aria-current="page">Privacy</a>
           <a href="/support/">Support</a>
         </nav>
@@ -103,7 +103,7 @@
           <h2 id="export-title">What export and restore include</h2>
           <div class="notice-panel">
             <p>
-              A Daymark daybook export contains tasks, events, Shelf records, and sample-data metadata. It
+              A Daymark daybook export contains tasks, events, Shelf records, and a marker for example entries. It
               does not include rituals or check-ins, focus history or timers, weekly reviews, assistant chat,
               or the images saved on the Shelf. The daily on-device restore copies cover that same limited
               file and keep up to seven copies. These tools are not a complete backup of every kind of

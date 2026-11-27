@@ -14,25 +14,23 @@
         const root = document.documentElement;
         const target = decodeURIComponent(location.hash.slice(1));
         if (target) root.dataset.deepTarget = target;
-        try {
-          const choice = sessionStorage.getItem("daymark-paper");
-          if (choice === "dark" || choice === "light") root.dataset.scheme = choice;
-        } catch { /* Session storage may be unavailable in private browsing. */ }
+        let choice = null;
+        try { choice = localStorage.getItem("daymark-paper"); } catch { /* Storage may be unavailable in private browsing. */ }
+        root.dataset.scheme = choice === "dark" || choice === "light" ? choice : matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
       })();
     </script>
     <script defer src="/app.js"></script>
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
-    <header class="site-header">
+    <header class="site-header site-header--hero">
       <div class="header-inner">
         <a class="brand" href="/" aria-label="Daymark home">
           <img src="/assets/daymark-app-icon.png" width="38" height="38" alt="" />
           <span>Daymark</span>
         </a>
         <nav class="primary-nav" aria-label="Main navigation">
-          <a href="/#journey">The daybook</a>
-          <a href="/#surfaces">What it holds</a>
+          <a href="/#surfaces">Tour</a>
           <a href="/privacy/">Privacy</a>
           <a href="/support/">Support</a>
         </nav>
@@ -40,7 +38,6 @@
           <button class="theme-toggle" type="button" data-theme-toggle aria-pressed="false" hidden>Try night paper</button>
         </div>
       </div>
-      <div class="reading-progress" aria-hidden="true"><span data-progress></span></div>
     </header>
 
     <main id="main">
@@ -48,14 +45,12 @@
         <div class="hero-atmosphere" aria-hidden="true"></div>
         <div class="hero-inner">
           <div class="hero-copy">
-            <p class="hero-context">A daybook for iPhone and iPad</p>
-            <h1 id="hero-title">Keep the days <em>that matter.</em></h1>
-            <p class="hero-lede">Plan today around the next event. Check in on rituals, focus on a task, and review the week from one place.</p>
+            <h1 id="hero-title">Keep the days that matter.</h1>
+            <p class="hero-lede">Daymark is a daybook for iPhone and iPad. Plan today around the next event, keep your rituals, give one thing your focus, and look back on the week.</p>
             <div class="hero-actions">
-              <a class="button button-light" href="#journey">Walk through Daymark <span aria-hidden="true">↓</span></a>
-              <a class="text-link text-link-light" href="/privacy/">Read the privacy details <span aria-hidden="true">↗</span></a>
+              <a class="button button-light" href="#surfaces">See how it works</a>
             </div>
-            <p class="availability">Coming soon to the App Store <span>·</span> iOS 18 or later</p>
+            <p class="availability">Coming soon to the App Store. Requires iOS 18 or later.</p>
           </div>
           <div class="hero-art">
             <span class="hero-paper hero-paper--back" aria-hidden="true"></span>
@@ -63,9 +58,8 @@
             <div class="hero-product-plane">
               <figure class="hero-figure">
                 <div class="device-frame device-frame-hero">
-                  <img src="/assets/today.webp" width="920" height="2000" alt="Daymark Today screen with a labeled sample day, the next event, open tasks, and rituals." fetchpriority="high" />
+                  <img src="/assets/today.webp" width="920" height="2000" alt="Daymark Today screen with the next event, open tasks, and rituals." fetchpriority="high" />
                 </div>
-                <figcaption><span class="sample-tag">Sample day</span> Example entries shown in the app.</figcaption>
               </figure>
             </div>
             <span class="hero-paper hero-paper--side" aria-hidden="true"></span>
@@ -73,23 +67,10 @@
         </div>
       </section>
 
-      <section class="journey-section section-pad" id="journey" data-walk="dawn" data-index="today" aria-labelledby="journey-title">
-        <div class="section-heading section-heading-wide">
-          <h2 id="journey-title">A day has a beginning,<br class="desktop-break" /> a middle, and a place to end.</h2>
-          <p>Daymark brings the parts of a daybook together around what you meant to do, what you did, and what you want to carry into tomorrow.</p>
-        </div>
-        <ol class="journey-list">
-          <li><a href="#today"><span class="journey-number">01</span><span class="journey-name">Plan</span><span class="journey-note">See what is next.</span><span class="journey-arrow" aria-hidden="true">↘</span></a></li>
-          <li><a href="#rituals"><span class="journey-number">02</span><span class="journey-name">Practice</span><span class="journey-note">Keep a small promise.</span><span class="journey-arrow" aria-hidden="true">↘</span></a></li>
-          <li><a href="#focus"><span class="journey-number">03</span><span class="journey-name">Focus</span><span class="journey-note">Give one thing time.</span><span class="journey-arrow" aria-hidden="true">↘</span></a></li>
-          <li><a href="#review"><span class="journey-number">04</span><span class="journey-name">Review</span><span class="journey-note">Notice what happened.</span><span class="journey-arrow" aria-hidden="true">↘</span></a></li>
-        </ol>
-      </section>
-
       <section class="surface-section" id="surfaces" data-walk="dawn" data-index="today" aria-labelledby="surfaces-title">
-        <div class="section-heading section-pad section-heading-inline">
-          <div><h2 id="surfaces-title">See how Daymark works, page by page.</h2></div>
-          <p>Real Daymark screens. Sample details are labeled where they appear.</p>
+        <div class="section-heading section-heading-inline">
+          <h2 id="surfaces-title">See how Daymark works, page by page.</h2>
+          <p>Real screens, captured from the app.</p>
         </div>
         <nav class="chapter-index" aria-label="Daymark pages">
           <div class="page-nav-track" data-nav-track>
@@ -111,7 +92,6 @@
                 {{PHONE_DECK}}
               </div>
             </div>
-            <figcaption class="stage-caption" data-stage-caption aria-live="polite"></figcaption>
           </figure>
         </aside>
 
@@ -141,7 +121,7 @@
         </div>
         <figure class="daylight-figure">
           <div class="daylight-screen">{{PHASE_FRAMES}}</div>
-          <figcaption data-phase-caption><span class="sample-tag">Product UI</span> Daylight · <span data-phase-name>Dawn</span>, recorded on iPhone</figcaption>
+          <figcaption data-phase-caption>Daylight · <span data-phase-name>Dawn</span>, recorded on iPhone</figcaption>
         </figure>
       </section>
 
@@ -156,16 +136,15 @@
           <p><strong>Calendar and Reminders</strong><span>Uses the system accounts and lists you select.</span></p>
           <p><strong>Weather and links</strong><span>Connect to providers only when those features are used.</span></p>
         </div>
-        <a class="text-link privacy-link" href="/privacy/">See every network use and what export includes <span aria-hidden="true">↗</span></a>
+        <a class="text-link privacy-link" href="/privacy/">See every network use and what export includes</a>
       </section>
 
       <section class="closing-section" aria-labelledby="closing-title">
         <div class="closing-inner">
           <h2 id="closing-title">Plan today. Remember the week.</h2>
-          <p>Coming soon to the App Store.</p>
+          <p>Coming soon to the App Store. Until then, the support page answers setup and data questions.</p>
           <div class="closing-links">
-            <a class="button button-light" href="#top">Back to the beginning <span aria-hidden="true">↑</span></a>
-            <a class="text-link text-link-light" href="/support/">Browse common questions <span aria-hidden="true">↗</span></a>
+            <a class="button button-light" href="/support/">Read the support page</a>
           </div>
         </div>
       </section>
@@ -175,7 +154,7 @@
       <div class="footer-inner">
         <a class="brand brand-footer" href="/" aria-label="Daymark home"><img src="/assets/daymark-app-icon.png" width="32" height="32" alt="" /><span>Daymark</span></a>
         <p>A quiet daybook for the days that matter.</p>
-        <nav aria-label="Footer navigation"><a href="/privacy/">Privacy</a><a href="/support/">Support</a><a href="#top">Back to top ↑</a></nav>
+        <nav aria-label="Footer navigation"><a href="/privacy/">Privacy</a><a href="/support/">Support</a><a href="#top">Back to top</a></nav>
       </div>
     </footer>
   </body>

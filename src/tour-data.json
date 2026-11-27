@@ -2,99 +2,338 @@
   "hero": {
     "id": "today",
     "asset": "today.webp",
-    "alt": "Daymark Today screen with a labeled sample day, the next event, open tasks, and rituals.",
-    "label": "Sample day",
+    "alt": "Daymark Today screen: Good morning, the next event (Dentist at 11:00 AM), and today’s rituals.",
     "caption": "Today"
   },
   "chapters": [
     {
-      "id": "today", "nav": "Today", "tone": "dawn", "title": "Plan the day.",
+      "id": "today",
+      "nav": "Today",
+      "tone": "dawn",
+      "title": "Plan the day.",
       "intro": "Today puts the next event first, then your tasks and rituals. Add a task or check in on a ritual without opening another page.",
       "steps": [
-        {"id":"brief","asset":"today-brief.webp","alt":"Today’s brief sheet with the next event, open tasks, rituals kept, focus totals, and Ask Daymark.","title":"A brief, when you want one.","body":"Tap Brief for what is next, what is open, the rituals kept, and today’s focus, with Ask Daymark one tap away.","detail":"The sheet puts the next event and its time beside the task, ritual, and focus totals. You can ask a follow-up without leaving it.","label":"Sample day","caption":"Today’s brief"},
-        {"id":"weather","asset":"today-weather.webp","alt":"Today with an Apple Weather card for Phoenix above open tasks and the first event of the day.","title":"The forecast beside the plans.","body":"The selected city’s Apple Weather forecast appears above tasks and events for the day.","detail":"Conditions live in the context of your schedule. There is no separate weather page to consult before making a plan.","label":"Sample day","caption":"Today with weather"},
-        {"id":"timeline","asset":"today-timeline.webp","alt":"Day view with a week strip and hourly timeline for sample events.","title":"See the day in hours.","body":"Open the day to see events laid out in time, and step through the week from the strip above.","detail":"An hourly view shows where commitments sit in relation to one another; the week strip makes moving to another day feel immediate.","label":"Sample day","caption":"Day"},
-        {"id":"month","asset":"today-month.webp","alt":"Month view for October 2026 with days that have events marked and the 19th selected.","title":"Find a day in the month.","body":"Days with events carry a mark. Tap one to open it.","detail":"Pull back from the details to see the shape of a month, then return directly to the day you want to explore.","label":"Sample day","caption":"Month"},
-        {"id":"tasks","asset":"today-tasks.webp","alt":"Tasks page with open tasks grouped by day and one finished task under Done.","title":"Every task in one list.","body":"Open tasks are grouped by day. Finished ones fold away under Done.","detail":"The next actions stay visible without losing the record of what you already finished. It is a list designed to be revisited.","label":"Sample day","caption":"Tasks"},
-        {"id":"block-time","asset":"today-block-time.webp","alt":"Block time sheet for a task with a start date, time, duration, and calendar action.","title":"Give a task its time.","body":"Block time for a task with a start and a length. It lands in the daybook, and on your Apple calendar once you import a writable one.","detail":"The sheet lets you set a date, start time, and duration before adding the block. Calendar write-back depends on the calendar you selected.","label":"Sample day","caption":"Block time"}
+        {
+          "id": "brief",
+          "asset": "today-brief.webp",
+          "alt": "Today’s brief: next up, Dentist at 11:00 AM; four tasks open and one done; seven of ten rituals kept; 100 minutes of focus; and an Ask Daymark button.",
+          "title": "A brief, when you want one.",
+          "body": "Tap Brief for what is next, what is open, the rituals kept, and today’s focus, with Ask Daymark one tap away.",
+          "caption": "Today’s brief"
+        },
+        {
+          "id": "today-event",
+          "asset": "today-event.webp",
+          "alt": "Event details for Dentist: today from 11:00 to 11:45 AM at Market Street, the forecast for that hour, and an Edit event button.",
+          "title": "Everything about the next event.",
+          "body": "Open an event for its time, place, calendar, and the forecast for that hour. Get directions, duplicate, share, or edit it from the same sheet.",
+          "caption": "Event details"
+        },
+        {
+          "id": "timeline",
+          "asset": "today-timeline.webp",
+          "alt": "Day view for Friday, November 27: the week strip above hourly events from the morning walk to lunch with Sam.",
+          "title": "See the day in hours.",
+          "body": "Open the day to see events laid out in time, and step through the week from the strip above.",
+          "caption": "Day"
+        },
+        {
+          "id": "today-layout",
+          "asset": "today-layout.webp",
+          "alt": "Today layout settings: Next up, Rituals, Weather, Tasks, and Day, each with a switch and a drag handle.",
+          "title": "Choose what Today shows.",
+          "body": "Turn sections on or off and drag them into the order you want. The greeting stays at the top.",
+          "caption": "Today layout"
+        }
       ]
     },
     {
-      "id": "rituals", "nav": "Rituals", "tone": "parchment", "title": "Keep a practice.",
+      "id": "rituals",
+      "nav": "Rituals",
+      "tone": "parchment",
+      "title": "Keep a practice.",
       "intro": "Set a daily, weekday, or weekly rhythm, then review check-ins across the week.",
       "steps": [
-        {"id":"rituals","asset":"rituals.webp","alt":"Rituals page with four sample practices and a weekly check-in ledger.","title":"Check in across the week.","body":"Use daily, weekday, or weekly cadences. Check in from Today or from the Rituals page.","detail":"A simple ledger makes the rhythm of a practice visible. Missed days stay part of the story without obscuring the days you kept.","label":"Sample day","caption":"Rituals"}
+        {
+          "id": "rituals",
+          "asset": "rituals.webp",
+          "alt": "Rituals page for today: seven of nine kept, with streaks, and a switch between Today, Week, and History.",
+          "title": "Check in across the week.",
+          "body": "Use daily, weekday, or weekly cadences. Check in from Today or the Rituals page, and look across the week or the history.",
+          "caption": "Rituals"
+        }
       ]
     },
     {
-      "id": "focus", "nav": "Focus", "tone": "parchment", "title": "Protect your attention.",
+      "id": "focus",
+      "nav": "Focus",
+      "tone": "parchment",
+      "title": "Protect your attention.",
       "intro": "Give one task a protected block of time, then see where today’s focus went.",
       "steps": [
-        {"id":"focus","asset":"focus.webp","alt":"Focus page with a 25-minute timer, session controls, and focus history.","title":"One dial, one task.","body":"Run a Pomodoro with focus, short rest, and long rest, or pick a 25, 50, or 90 minute session.","detail":"Set a deliberate boundary around your work, with rest built into the rhythm when you choose Pomodoro.","label":"Sample day","caption":"Focus"},
-        {"id":"focus-timers","asset":"focus-timers.webp","alt":"Timers page with a sample birthday countdown and reusable timers.","title":"Timers and countdowns.","body":"Keep reusable timers for the things you do often, and count down to the dates ahead.","detail":"A familiar timer can be started again, while a countdown gives important future dates a place in the daybook.","label":"Sample day","caption":"Timers"},
-        {"id":"focus-history","asset":"focus-history.webp","alt":"Seven-day focus history with today’s sessions listed below.","title":"See where the time went.","body":"Focus history keeps the last seven days and today’s sessions in one ledger.","detail":"Look back across the week and see individual sessions beneath the daily totals. Time spent becomes something you can reflect on.","label":"Sample day","caption":"Focus history"},
-        {"id":"focus-ambient","asset":"focus-ambient.webp","alt":"Review page with a running Focus session pinned above the tab bar.","title":"Focus comes with you.","body":"A running session stays in view while you move to another page.","detail":"You can glance at the session while using another part of Daymark, without abandoning the work you started.","label":"Sample week","caption":"Focus while reviewing"}
+        {
+          "id": "focus",
+          "asset": "focus.webp",
+          "alt": "Focus page with a 25-minute dial, a Begin focus button, and 25, 50, and 90 minute lengths.",
+          "title": "One dial, one task.",
+          "body": "Run a Pomodoro with focus, short rest, and long rest, or pick a 25, 50, or 90 minute session.",
+          "caption": "Focus"
+        }
       ]
     },
     {
-      "id": "review", "nav": "Review", "tone": "dusk", "title": "Review what mattered.",
-      "intro": "Weekly Review gathers completed tasks, focus sessions, and ritual check-ins from the week you recorded.",
+      "id": "review",
+      "nav": "Review",
+      "tone": "dusk",
+      "title": "Review what mattered.",
+      "intro": "Review gathers the week’s finished tasks, focus sessions, and ritual check-ins as they happen.",
       "steps": [
-        {"id":"review","asset":"review.webp","alt":"Review page labeled sample week, showing task, focus, and ritual totals.","title":"A week you can see.","body":"Tasks done, focus minutes, and rituals kept come together beside three prompts: what mattered, what got in the way, and one change for next week.","detail":"The totals are drawn from the week you recorded. Add your own answers beneath the prompts to keep a record of what you want to repeat or change.","label":"Sample week","caption":"Review"}
+        {
+          "id": "review",
+          "asset": "review.webp",
+          "alt": "Review for November 23 to 29: one task done, 350 focus minutes, five days marked, ritual counts so far, and the week’s prompts.",
+          "title": "A week you can see.",
+          "body": "Tasks done, focus minutes, and rituals kept so far sit above three prompts: what mattered, what got in the way, and one change for next week.",
+          "caption": "Review"
+        }
       ]
     },
     {
-      "id": "shelf", "nav": "Shelf", "tone": "dusk", "title": "Save what you want to find again.",
+      "id": "shelf",
+      "nav": "Shelf",
+      "tone": "dusk",
+      "title": "Save what you want to find again.",
       "intro": "Notes, links, and images in one place. Share from another app and it lands on the Shelf the next time you open Daymark.",
       "steps": [
-        {"id":"shelf","asset":"shelf.webp","alt":"Shelf with sample notes and images, search, filters, and tags.","title":"Filter by kind or tag.","body":"Pin what should stay on top, and tag entries so they are easy to gather again.","detail":"Collect the small things you want to remember and give them just enough structure to find them later.","label":"Sample day","caption":"Shelf"},
-        {"id":"shelf-entry","asset":"shelf-entry.webp","alt":"Open sample note with its text, tags, and entry actions.","title":"A note, ready to return to.","body":"Copy it, share it, edit it, or move it to Recently deleted. Entries can be restored there for 30 days.","detail":"A saved thought stays editable, portable, and recoverable for a time when you decide it no longer belongs on the Shelf.","label":"Sample day","caption":"Shelf entry"},
-        {"id":"search","asset":"search.webp","alt":"Search sheet for finding tasks, notes, events, rituals, and weekly reviews.","title":"Find anything in the daybook.","body":"Search tasks, events, Shelf entries, rituals, and weekly reviews. Spotlight indexing is optional.","detail":"Move across the kinds of information in your daybook from one search, without remembering which page holds the answer.","label":"Product UI","caption":"Search"}
+        {
+          "id": "shelf",
+          "asset": "shelf.webp",
+          "alt": "Shelf with ten entries, three pinned, a search field, filters for notes, links, and images, and a pinned photo.",
+          "title": "Filter by kind or tag.",
+          "body": "Pin what should stay on top, and tag entries so they are easy to gather again.",
+          "caption": "Shelf"
+        },
+        {
+          "id": "search",
+          "asset": "search.webp",
+          "alt": "Search for “walk” finding the Morning walk event and the Morning walk ritual.",
+          "title": "Find anything in the daybook.",
+          "body": "Search tasks, events, Shelf entries, rituals, and weekly reviews from one field. Spotlight indexing is optional.",
+          "caption": "Search"
+        }
       ]
     },
     {
-      "id": "ask", "nav": "Ask", "tone": "dusk", "title": "Ask about your day.",
+      "id": "ask",
+      "nav": "Ask",
+      "tone": "dusk",
+      "title": "Ask about your day.",
       "intro": "Ask Daymark answers from your daybook and makes typed, explainable changes. It works offline, with or without the optional model.",
       "steps": [
-        {"id":"ask-brief","asset":"ask-brief.webp","alt":"Ask Daymark in Daybook mode answering Brief me with sample events, tasks, and rituals.","title":"A brief from the day you have.","body":"Ask for the day’s shape and get an answer from the events, tasks, rituals, focus, and weather already in Daymark.","detail":"The answer is informed by the records already in your daybook, so a question can become a useful place to begin.","label":"Sample day","caption":"Ask Daymark"},
-        {"id":"gemma-task","asset":"gemma-task.webp","alt":"Ask Daymark on a physical iPhone turning a request to remember to water plants into a typed task action receipt.","title":"From phrase to typed action.","body":"With the optional Gemma 4 model, a loose sentence can produce a typed action and reviewable receipt. Daymark validates and writes the change.","detail":"The model interprets the request, but the app remains responsible for validating the action before it becomes part of your daybook.","label":"Example content","caption":"Gemma 4 Fast · iPhone"},
-        {"id":"gemma-grounded","asset":"gemma-grounded.webp","alt":"Ask Daymark on a physical iPhone answering what to do first from an explicitly selected sample daybook.","title":"Answers from your daybook.","body":"In Daybook mode, answers come from your actual day, and each reply is tagged with the mode that wrote it.","detail":"The visible mode helps distinguish answers drawn from your records from an open-ended conversation.","label":"Example content","caption":"Gemma 4 Fast · iPhone"},
-        {"id":"open-chat","asset":"open-chat.webp","alt":"Ask Daymark in Open chat mode with sample suggestions, a Web control, and the Fast on-device model selected.","title":"Open conversation, on request.","body":"Switch to Open chat for general questions. Web search is off unless you turn it on.","detail":"General conversation is available separately from daybook questions, with network search remaining an explicit choice.","label":"Product UI","caption":"Open chat"}
+        {
+          "id": "gemma-task",
+          "asset": "gemma-task.webp",
+          "alt": "Ask Daymark on iPhone turning “I need to remember to water the plants” into a task for today, with an Undo receipt.",
+          "title": "From a sentence to a task.",
+          "body": "Typed commands such as “remember to” or “add a task” make the change directly and show a receipt with Undo. No model is needed.",
+          "caption": "Typed command · iPhone"
+        },
+        {
+          "id": "gemma-grounded",
+          "asset": "gemma-grounded.webp",
+          "alt": "Ask Daymark on iPhone with Gemma 4 Fast answering “What should I do first today?” from the day’s tasks.",
+          "title": "Answers from your daybook.",
+          "body": "With the optional Gemma 4 model, Daybook mode answers questions from your own tasks and events, on the device.",
+          "caption": "Gemma 4 Fast · iPhone"
+        },
+        {
+          "id": "open-chat",
+          "asset": "open-chat.webp",
+          "alt": "Ask Daymark in Open chat with the Fast model installed, two suggestions, and a Web control.",
+          "title": "Open conversation, on request.",
+          "body": "Switch to Open chat for general questions. Web search is off unless you turn it on.",
+          "caption": "Open chat"
+        }
       ]
     },
     {
-      "id": "settings", "nav": "Settings", "tone": "parchment", "title": "Yours to set.",
+      "id": "settings",
+      "nav": "Settings",
+      "tone": "parchment",
+      "title": "Yours to set.",
       "intro": "Daymark starts empty and stays quiet until you ask for more.",
       "steps": [
-        {"id":"welcome","asset":"welcome.webp","alt":"Welcome screen with Enter Daymark and Explore a sample day.","title":"It starts empty.","body":"A fresh install holds nothing of yours. Explore a sample day to see the loop, then choose Start fresh to clear it.","detail":"Try the experience with clearly labeled example content, without carrying those examples into a fresh daybook.","label":"Product UI","caption":"Welcome"},
-        {"id":"appearance","asset":"appearance.webp","alt":"Appearance settings with System, Daylight, and fixed paper tones.","title":"Choose the paper.","body":"Pick a paper tone and an accent, or let Daylight move the page with the sun.","detail":"A fixed tone stays in place. Daylight changes between paper tones around sunrise and sunset in the selected weather city, when available.","label":"Product UI","caption":"Appearance"},
-        {"id":"notifications","asset":"notifications.webp","alt":"Notification settings for morning brief, task due, ritual nudge, and event alerts.","title":"Reminders you opt into.","body":"A morning brief, due tasks, ritual nudges, and event alerts. Each one is off until you turn it on.","detail":"Choose which kinds of prompts deserve permission to interrupt your day; silence remains the starting point.","label":"Product UI","caption":"Notifications"},
-        {"id":"calendar","asset":"calendar.webp","alt":"Calendar and Reminders settings with calendar access off and a connect action.","title":"Your calendar, live.","body":"Connect Apple Calendar and Reminders, then choose the calendars and lists Daymark reads. Edits save back to those accounts.","detail":"You select the sources Daymark can use, while the underlying calendar and reminder accounts remain managed by the system.","label":"Product UI","caption":"Calendar & Reminders"},
-        {"id":"data","asset":"data.webp","alt":"Data settings with Spotlight, import, export, and erase controls.","title":"Keep a copy, or start again.","body":"Import or export tasks, events, and Shelf entries. Spotlight is optional. Erase Daymark data has its own confirmation.","detail":"Data controls are explicit. The limited export covers the named record types, and erasing the daybook requires a deliberate confirmation.","label":"Product UI","caption":"Data"}
+        {
+          "id": "appearance",
+          "asset": "appearance.webp",
+          "alt": "Look and feel settings: System, Daylight, and paper choices, accent color, Next up pattern, and haptics.",
+          "title": "Choose the paper.",
+          "body": "Pick a paper tone and an accent, or let Daylight move the page with the sun.",
+          "caption": "Appearance"
+        },
+        {
+          "id": "calendar",
+          "asset": "calendar.webp",
+          "alt": "Calendar and Reminders settings with calendar access off and a Connect button.",
+          "title": "Your calendar, live.",
+          "body": "Connect Apple Calendar and Reminders, then choose the calendars and lists Daymark reads. Edits save back to those accounts.",
+          "caption": "Calendar & Reminders"
+        }
       ]
     }
   ],
   "ipad": [
-    {"id":"today","name":"Today","asset":"ipad-today.webp","alt":"Daymark Today on iPad in landscape, open as a two-page spread with Plan, Practice, tasks, and weather.","caption":"Plan and Practice share the spread.","label":"Sample day"},
-    {"id":"rituals","name":"Rituals","asset":"ipad-rituals.webp","alt":"Daymark Rituals on iPad in landscape with today’s check-ins facing the weekly ledger.","caption":"Today’s check-ins face the week.","label":"Sample day"},
-    {"id":"focus","name":"Focus","asset":"ipad-focus.webp","alt":"Daymark Focus on iPad in landscape with the timer facing focus history and timers.","caption":"The dial and its ledger, side by side.","label":"Sample day"},
-    {"id":"review","name":"Review","asset":"ipad-review.webp","alt":"Daymark Review on iPad in landscape with weekly totals facing the review prompts.","caption":"The week and its prompts share the spread.","label":"Sample week"}
+    {
+      "id": "today",
+      "name": "Today",
+      "asset": "ipad-today.webp",
+      "alt": "Daymark Today on iPad in landscape, open as a two-page spread with Plan, Practice, tasks, and weather.",
+      "caption": "Plan and Practice share the spread."
+    },
+    {
+      "id": "rituals",
+      "name": "Rituals",
+      "asset": "ipad-rituals.webp",
+      "alt": "Daymark Rituals on iPad in landscape with today’s check-ins facing the weekly ledger.",
+      "caption": "Today’s check-ins face the week."
+    },
+    {
+      "id": "focus",
+      "name": "Focus",
+      "asset": "ipad-focus.webp",
+      "alt": "Daymark Focus on iPad in landscape with the timer facing focus history and timers.",
+      "caption": "The dial and its ledger, side by side."
+    },
+    {
+      "id": "review",
+      "name": "Review",
+      "asset": "ipad-review.webp",
+      "alt": "Daymark Review on iPad in landscape with weekly totals facing the review prompts.",
+      "caption": "The week and its prompts share the spread."
+    },
+    {
+      "id": "shelf",
+      "name": "Shelf",
+      "asset": "ipad-shelf.webp",
+      "alt": "Daymark Shelf on iPad in landscape: pinned entries on the left page and the library on the right.",
+      "caption": "Pinned on the left, the library on the right."
+    }
   ],
   "phases": [
-    {"id":"predawn","name":"Predawn","when":"Before first light","asset":"predawn.webp","alt":"Today on Predawn paper."},
-    {"id":"dawn","name":"Dawn","when":"Around sunrise","asset":"dawn.webp","alt":"Today on Dawn paper."},
-    {"id":"parchment","name":"Parchment","when":"The day","asset":"parchment.webp","alt":"Today on Parchment paper."},
-    {"id":"dusk","name":"Dusk","when":"Around sunset","asset":"dusk.webp","alt":"Today on Dusk paper."},
-    {"id":"nightfall","name":"Nightfall","when":"After sunset","asset":"nightfall.webp","alt":"Today on Nightfall paper."},
-    {"id":"night","name":"Night","when":"Late night","asset":"night.webp","alt":"Today on Night paper."}
+    {
+      "id": "predawn",
+      "name": "Predawn",
+      "when": "Before first light",
+      "asset": "predawn.webp",
+      "alt": "Today on Predawn paper."
+    },
+    {
+      "id": "dawn",
+      "name": "Dawn",
+      "when": "Around sunrise",
+      "asset": "dawn.webp",
+      "alt": "Today on Dawn paper."
+    },
+    {
+      "id": "parchment",
+      "name": "Parchment",
+      "when": "The day",
+      "asset": "parchment.webp",
+      "alt": "Today on Parchment paper."
+    },
+    {
+      "id": "dusk",
+      "name": "Dusk",
+      "when": "Around sunset",
+      "asset": "dusk.webp",
+      "alt": "Today on Dusk paper."
+    },
+    {
+      "id": "nightfall",
+      "name": "Nightfall",
+      "when": "After sunset",
+      "asset": "nightfall.webp",
+      "alt": "Today on Nightfall paper."
+    },
+    {
+      "id": "night",
+      "name": "Night",
+      "when": "Late night",
+      "asset": "night.webp",
+      "alt": "Today on Night paper."
+    }
   ],
   "ledger": {
-    "days": [["M","Monday"],["T","Tuesday"],["W","Wednesday"],["T","Thursday"],["F","Friday"],["S","Saturday"],["S","Sunday"]],
+    "days": [
+      [
+        "M",
+        "Monday"
+      ],
+      [
+        "T",
+        "Tuesday"
+      ],
+      [
+        "W",
+        "Wednesday"
+      ],
+      [
+        "T",
+        "Thursday"
+      ],
+      [
+        "F",
+        "Friday"
+      ],
+      [
+        "S",
+        "Saturday"
+      ],
+      [
+        "S",
+        "Sunday"
+      ]
+    ],
     "rows": [
-      {"name":"Morning walk","cadence":"Daily","target":7,"kept":[0,1],"off":[]},
-      {"name":"Read ten pages","cadence":"Daily","target":7,"kept":[0,1],"off":[]},
-      {"name":"Stretch","cadence":"Weekdays","target":5,"kept":[0],"off":[5,6]},
-      {"name":"Call someone","cadence":"3× weekly","target":3,"kept":[],"off":[]}
+      {
+        "name": "Morning walk",
+        "cadence": "Daily",
+        "target": 7,
+        "kept": [
+          0,
+          1
+        ],
+        "off": []
+      },
+      {
+        "name": "Read ten pages",
+        "cadence": "Daily",
+        "target": 7,
+        "kept": [
+          0,
+          1
+        ],
+        "off": []
+      },
+      {
+        "name": "Stretch",
+        "cadence": "Weekdays",
+        "target": 5,
+        "kept": [
+          0
+        ],
+        "off": [
+          5,
+          6
+        ]
+      },
+      {
+        "name": "Call someone",
+        "cadence": "3× weekly",
+        "target": 3,
+        "kept": [],
+        "off": []
+      }
     ]
   }
 }
